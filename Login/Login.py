@@ -26,14 +26,20 @@ def Home():
         isfound = app.db.user.find_one({'email': email})
 
         if isfound:
-            
-            if isfound["email"] == email and bcrypt.checkpw(password_byte, isfound["password"]):
+             if bcrypt.checkpw(password_byte, isfound["password"]):
                 token = jwt.encode({'user': isfound["username"], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= 59)}, "SecretKey1911") 
-                return jsonify({'token': token})
+                return jsonify({'User found': True, 'token': token})
+             else:
+                 return Response(
+            response= "pasword doesn't match", 
+            status = 400)
+
 
         else:
-            return Response(status = 400,
-            response= "user not found")
+
+            return Response(
+            response= "user not found", 
+            status = 400)
             
     
 
