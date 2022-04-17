@@ -52,7 +52,7 @@ def verify():
 
     else:
         OTP = generateOTP()
-        token = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= 1440)},"SecretKey1911")
+        token = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= 120)},"SecretKey1911")
         app.db.OTPs.insert_one({"OTP":OTP,"token": token, "email": email})
         msg = Message('Confirm Email', sender='mohamedmohsen96661@gmail.com', recipients=[email])
         msg.html = render_template('OTP_EMAIL.html',OTP=OTP)
@@ -84,7 +84,8 @@ def home():
             "username": username,
             "date_of_birth": date_of_birth,
             "creation_date": datetime.datetime.now(),
-            "admin": False
+            "admin": False,
+            "profile_picture_url": "https://hips.hearstapps.com/digitalspyuk.cdnds.net/17/13/1490989105-twitter1.jpg?resize=480:*"
             })
     
         return jsonify({"200": "Successufly inserted new user"}),200
@@ -110,7 +111,7 @@ def confirm_email():
         try: 
             data = jwt.decode(Token, "SecretKey1911", "HS256")
         except:
-            return jsonify({'401': 'Token expired!'}), 401
+            return jsonify({'401': 'OTP expired!'}), 401
 
     return jsonify({
         "200": "Email verified",
