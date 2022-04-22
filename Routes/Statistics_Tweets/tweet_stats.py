@@ -1,9 +1,9 @@
-from Tweetstruct import col_of_users,collectionoftweets,col_of_stats,Client,Tweet,retweet,objectid_of_like_dates,col_of_tweets,wraps,encode,decode
-from flask import Blueprint, request, jsonify, Response
+from Routes.Tweetstruct import col_of_stats,objectid_of_like_dates,col_of_tweets,wraps,encode,decode
+from flask import Blueprint, request, jsonify
 from datetime import datetime
 from bson import ObjectId
 
-Tweet_stats = Blueprint(__name__,"Tweet_stats")
+Tweet_stats = Blueprint("Tweet_stats", __name__)
 
 def token_required(f):
     @wraps(f)

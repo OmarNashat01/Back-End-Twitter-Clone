@@ -1,9 +1,9 @@
-from Tweetstruct import Tweet, retweet, collectionoftweets,wraps,encode,decode
-from flask import Blueprint, request, jsonify, Response
+from Routes.Tweetstruct import Tweet, collectionoftweets,wraps,encode,decode
+from flask import Blueprint, request, jsonify
 from datetime import datetime
 from bson import ObjectId
 
-Tweet_app = Blueprint(__name__, "Tweet_app")
+Tweet_app = Blueprint("Tweet_app", __name__)
 
 def token_required(f):
     @wraps(f)

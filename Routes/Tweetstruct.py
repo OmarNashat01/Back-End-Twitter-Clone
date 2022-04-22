@@ -1,10 +1,9 @@
-from Database import Client
-from flask import Flask, request, jsonify
+from Database.Database import Database
+from flask import jsonify
 from flask_restx import Resource
-import pymongo
 from datetime import datetime
-from bson import ObjectId
 from functools import wraps
+from bson import ObjectId
 from jwt import encode, decode
 #from setuptools import setup
 #from multiprocessing import Process,Manager
@@ -12,7 +11,7 @@ from jwt import encode, decode
 
 objectid_of_like_dates = "625ad8751b0d674357495ccd"
 
-db = Client["Twitter_new"]
+db = Database["Twitter_new"]
 col_of_tweets = db["tweets"]
 col_of_retweets = db["tweets"]
 col_of_stats = db["stats"]

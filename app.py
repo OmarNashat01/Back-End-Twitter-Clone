@@ -2,7 +2,7 @@ from flask import Flask
 
 
 # Importing all Routes
-from Routes.Login import Login
+from Routes.Login.Login import Login
 from Routes.Friendships.followers import followers
 from Routes.Friendships.following import following
 from Routes.Statistics.new_accounts import new_accounts_count
