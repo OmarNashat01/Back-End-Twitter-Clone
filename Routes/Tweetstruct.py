@@ -1,7 +1,7 @@
 from Database import Client
 from flask import Flask, request, jsonify
 from flask_restx import Resource
-from pymongo import MongoClient
+import pymongo
 from datetime import datetime
 from bson import ObjectId
 from functools import wraps
@@ -19,28 +19,6 @@ col_of_stats = db["stats"]
 col_of_users = db["User"]
 
 
-def token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-            token = None
-            expiry_Date_token = encode(
-                {'exp': datetime.datetime.utcnow()}, "1234")
-            if 'x-access-token' in request.headers:
-               token = request.headers['x-access-token']
-
-            if not token:
-               return jsonify({'message': 'Token is missing!'}), 401
-
-            try:
-                data = decode(token, "SecretKey1911", "HS256")
-                user_id = ObjectId(data['user_id'])
-                current_user = app.db.User.find_one({'_id': user_id})
-            except:
-               return jsonify({'message': 'Token expired!'}), 401
-
-            return f(current_user, *args, **kwargs)
-
-    return decorated
 
 class Reply(Resource):
     _id: str

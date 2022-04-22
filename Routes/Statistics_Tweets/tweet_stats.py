@@ -1,13 +1,35 @@
-from Tweetstruct import col_of_users,collectionoftweets,col_of_stats,Client,Tweet,retweet,objectid_of_like_dates,col_of_tweets,token_required
+from Tweetstruct import col_of_users,collectionoftweets,col_of_stats,Client,Tweet,retweet,objectid_of_like_dates,col_of_tweets,wraps,encode,decode
 from flask import Blueprint, request, jsonify, Response
 from datetime import datetime
 from bson import ObjectId
-from pymongo import MongoClient
 
 Tweet_stats = Blueprint(__name__,"Tweet_stats")
 
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+            token = None
+            expiry_Date_token = encode(
+                {'exp': datetime.datetime.utcnow()}, "1234")
+            if 'x-access-token' in request.headers:
+               token = request.headers['x-access-token']
 
-@Tweet_stats.route("/admin/statistics/like_count", methods=["GET"])
+            if not token:
+               return jsonify({'message': 'Token is missing!'}), 401
+
+            try:
+                data = decode(token, "SecretKey1911", "HS256")
+                user_id = ObjectId(data['user_id'])
+                current_user = Tweet_stats.db.User.find_one({'_id': user_id})
+            except:
+               return jsonify({'message': 'Token expired!'}), 401
+
+            return f(current_user, *args, **kwargs)
+
+    return decorated
+
+
+@Tweet_stats.route("/like_count", methods=["GET"])
 @token_required
 def get_like_count_using_a_query(current_user):
     start_date = request.args.get(
@@ -41,7 +63,7 @@ def get_like_count_using_a_query(current_user):
         return {"count": x}, 200
 
 
-@Tweet_stats.route("/admin/statistics/tweet_count", methods=["GET"])
+@Tweet_stats.route("/tweet_count", methods=["GET"])
 @token_required
 def get_tweet_count_using_a_query(current_user):
     start_date = request.args.get(

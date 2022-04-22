@@ -1,12 +1,34 @@
-from Tweetstruct import Tweet,retweet,collectionoftweets,token_required
-from flask import Blueprint,request,jsonify,Response
+from Tweetstruct import Tweet, retweet, collectionoftweets,wraps,encode,decode
+from flask import Blueprint, request, jsonify, Response
 from datetime import datetime
 from bson import ObjectId
 
-Tweet_app = Blueprint(__name__,"Tweet_app")
+Tweet_app = Blueprint(__name__, "Tweet_app")
 
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+            token = None
+            expiry_Date_token = encode(
+                {'exp': datetime.datetime.utcnow()}, "1234")
+            if 'x-access-token' in request.headers:
+               token = request.headers['x-access-token']
 
-@Tweet_app.route("/tweets", methods=["POST"])
+            if not token:
+               return jsonify({'message': 'Token is missing!'}), 401
+
+            try:
+                data = decode(token, "SecretKey1911", "HS256")
+                user_id = ObjectId(data['user_id'])
+                current_user = Tweet_app.db.User.find_one({'_id': user_id})
+            except:
+               return jsonify({'message': 'Token expired!'}), 401
+
+            return f(current_user, *args, **kwargs)
+
+    return decorated
+
+@Tweet_app.route("/", methods=["POST"])
 @token_required
 def create_tweet(current_user):
     json = request.json
@@ -23,7 +45,7 @@ def create_tweet(current_user):
         return {"404": "operation failed"}, 404
 
 
-@Tweet_app.route("/tweets/tweet_id", methods=["GET"])
+@Tweet_app.route("/tweet_id", methods=["GET"])
 @token_required
 def get_one_tweet(current_user):
     Id = str(request.args.get("Id", default=None, type=str))
@@ -58,7 +80,7 @@ def get_one_tweet(current_user):
                     "comments": t1.comments}), 200
 
 
-@Tweet_app.route("/tweets/all", methods=["GET"])
+@Tweet_app.route("/all", methods=["GET"])
 @token_required
 def get_all_tweets(current_user):
     # number of tweets to return
@@ -77,7 +99,7 @@ def get_all_tweets(current_user):
     return {"Tweets": tweets.Tweets}, 200
 
 
-@Tweet_app.route("/tweets", methods=["DELETE"])
+@Tweet_app.route("/", methods=["DELETE"])
 @token_required
 def delete_one_tweet(current_user):
     #ID of tweet to delete
