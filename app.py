@@ -7,7 +7,7 @@ from Routes.Friendships.followers import followers
 from Routes.Friendships.following import following
 from Routes.Statistics.new_accounts import new_accounts_count
 from Routes.Statistics.retweets_count import retweets_count
-from Routes.Statistics_Tweets.tweet_stats import Tweet_stats
+from Routes.Tweet_Statistics.tweet_stats import Tweet_stats
 from Routes.Tweets.Tweets import Tweet_app
 
 # Creating flask application
