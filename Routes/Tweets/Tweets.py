@@ -17,7 +17,7 @@ def create_tweet(current_user):
     tweet.set_pic(current_user["prof_pic_url"])
     tweet.set_name(current_user["username"])
     tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
-    if json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text is None and tweet.videos_urls is [] and tweet.images_urls is []):
+    if json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text is "" and tweet.videos_urls is [] and tweet.images_urls is []):
         return {"400", "Invalid parameters"}, 400
     if tweet.save_to_database() is False:
         return {"200": "successfull tweet creation"}, 200
@@ -60,7 +60,7 @@ def get_one_tweet(current_user):
                     "comments": t1.comments}), 200
 
 
-@Tweet_app.route("/tweets/all", methods=["GET"])
+@Tweet_app.route("/tweets/random", methods=["GET"])
 @token_required
 def get_all_tweets(current_user):
     # number of tweets to return
@@ -85,6 +85,28 @@ def get_all_user_tweets(current_user):
     # number of tweets to return
     pag_token = request.args.get("page", default=1, type=int)
     _id = current_user["_id"]
+    tweets = collectionoftweets()
+    if tweets.Tweets != []:
+        tweets.Tweets = []
+    t = tweets.get_from_user_tweets_database(int(pag_token), ObjectId(_id))
+    print(t)
+    if pag_token <= 0 or int(pag_token) is False:
+        return {"400": "invalid pagination token,please enter an integer number above 0"}, 400
+    elif t is True:
+        return {"404": "tweets are unavailable"}, 404
+    elif pag_token > len(list(tweets.Tweets)):
+        return {"Tweets": tweets.Tweets}, 201
+
+    return {"Tweets": tweets.Tweets}, 200
+
+
+@Tweet_app.route("/tweets/all", methods=["GET"])
+@token_required
+def get_all_user_tweets(current_user):
+    # number of tweets to return
+    Id = str(request.args.get("Id", default=None, type=str))
+    pag_token = request.args.get("page", default=1, type=int)
+    _id = ObjectId(Id)
     tweets = collectionoftweets()
     if tweets.Tweets != []:
         tweets.Tweets = []
