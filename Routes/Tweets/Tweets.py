@@ -1,9 +1,9 @@
-from Tweetstruct import Tweet, retweet, collectionoftweets, token_required,col_of_users
-from flask import Blueprint, request, jsonify, Response
+from Routes.Tweetstruct import Tweet, collectionoftweets, token_required,col_of_users
+from flask import Blueprint, request, jsonify
 from datetime import datetime
 from bson import ObjectId
 
-Tweet_app = Blueprint(__name__, "Tweet_app")
+Tweet_app = Blueprint("Tweet_app", __name__)
 
 
 @Tweet_app.route("/tweets", methods=["POST"])
@@ -81,7 +81,7 @@ def get_all_tweets(current_user):
 
 @Tweet_app.route("/tweets/all/me", methods=["GET"])
 @token_required
-def get_all_user_tweets(current_user):
+def get_all_user_tweets_tweets(current_user):
     # number of tweets to return
     pag_token = request.args.get("page", default=1, type=int)
     _id = current_user["_id"]

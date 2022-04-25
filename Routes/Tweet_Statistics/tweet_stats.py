@@ -1,10 +1,9 @@
-from Tweetstruct import col_of_users,collectionoftweets,col_of_stats,Client,Tweet,retweet,objectid_of_like_dates,col_of_tweets,token_required,Date,getDifference
-from flask import Blueprint, request, jsonify, Response
+from Routes.Tweetstruct import col_of_stats,Client,objectid_of_like_dates,col_of_tweets,token_required,Date,getDifference
+from flask import Blueprint, request, jsonify
 from datetime import datetime,timedelta
 from bson import ObjectId
-from pymongo import MongoClient
 
-Tweet_stats = Blueprint(__name__,"Tweet_stats")
+Tweet_stats = Blueprint("Tweet_stats", __name__)
 
 
 @Tweet_stats.route("/admin/statistics/like_count", methods=["GET"])
