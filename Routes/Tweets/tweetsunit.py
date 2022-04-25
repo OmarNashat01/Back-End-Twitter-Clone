@@ -1,108 +1,156 @@
 import unittest
 from app import app
-
-
+import json
+from flask import jsonify
 #sub class from testcase class
 
 
 class TestTweets(unittest.TestCase):
-
     #check for response 200, tweet returned successfully
-    def test_success(self):
+    def test_get_tweet_success(self):
+        print("_________________________________________________")
         tester = app.test_client(self)
-        response = tester.get("/tweets/tweet_id?Id=625c1825871ec7725260372c")
+        response = tester.get("/tweets/tweet_id?Id=626446fa02862861daa00931")
         statuscode = response.status_code
         self.assertEqual(statuscode, 200)
+        print("tweet is returned")
+        print("_________________________________________________")
+        print(response.data)
 
     #check for response 400, User entered Invalid tweetID
-    def test_invalid_input(self):
+    def test_invalid_ID_get_tweet_input(self):
         tester = app.test_client(self)
+        print("_________________________________________________")
         response = tester.get("/tweets/tweet_id?Id=")
         statuscode = response.status_code
         self.assertEqual(statuscode, 400)
+        print("Invalid Id")
+        print("_________________________________________________")
+        print(response.data)
 
     #check for response 404, tweet Doesnt Exist
-    def test_not_found(self):
+    def test_tweet_not_found(self):
         tester = app.test_client(self)
-        response = tester.get("/tweets/tweet_id?Id=1012001")
+        print("_________________________________________________")
+        response = tester.get("/tweets/tweet_id?Id=626446fa02862871daa00931")
         statuscode = response.status_code
         self.assertEqual(statuscode, 404)
-        
+        print("tweet is not in the database")
+        print("_________________________________________________")
+        print(response.data)
+
     #check for response 200, List of tweets returned successfully
 
-    def test_success(self):
+    def test_get_random_tweet_success(self):
         tester = app.test_client(self)
-        response = tester.get("/tweets/all?page=1")
+        print("_________________________________________________")
+        response = tester.get("/tweets/random?page=1")
         statuscode = response.status_code
         self.assertEqual(statuscode, 200)
+        print("random tweets are returned")
+        print("_________________________________________________")
+        print(response.data)
 
-    #check for response 400, User entered Invalid page number
-    def test_invalid_input(self):
+    #check for response 400, User entered Invalid tweetID
+    def test_invalid_page_number(self):
         tester = app.test_client(self)
-        response = tester.get("/tweets/all?page=-1")
+        print("_________________________________________________")
+        response = tester.get("/tweets/random?page=-1")
         statuscode = response.status_code
         self.assertEqual(statuscode, 400)
-
-    #check for response 404, page number doesnt hold anything
-    def test_not_found(self):
-        tester = app.test_client(self)
-        response = tester.get("/tweets/all?page=50")
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 404)
-        
-    #check for response 200, tweet deleted successfully
-    def test_success(self):
-        tester = app.test_client(self)
-        response = tester.delete("/tweets?Id=625c1825871ec7725260372c")
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
-
-    #check for response 400, User entered Invalid tweet id
-    def test_invalid_input(self):
-        tester = app.test_client(self)
-        response = tester.delete("/tweets?Id=")
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 400)
+        print("page  number invalid")
+        print("_________________________________________________")
+        print(response.data)
 
     #check for response 404, tweet Doesnt Exist
-    def test_not_found(self):
+    def test_tweet_page_not_found(self):
         tester = app.test_client(self)
-        response = tester.delete("/tweets?Id=1012001")
+        print("_________________________________________________")
+        response = tester.get("/tweets/random?page=50")
         statuscode = response.status_code
         self.assertEqual(statuscode, 404)
-        
-    #check for response 200, tweet posted succefully
+        print("page does not exist")
+        print("_________________________________________________")
+        print(response.data)
 
-    def test_success(self):
+    def test_get_user_tweet_success(self):
         tester = app.test_client(self)
-        response = tester.post("/tweets",{
-            "user_id": "625560c0e10c0b48c19d2cb5",
-            "username":"mohamed99883",
-            "Text":"why are you running",
-            "videos":[],
-            "images":[]
-        })
+        print("_________________________________________________")
+        response = tester.get("/tweets/all?Id=6265b8efc557bc4aa2f038ab")
         statuscode = response.status_code
         self.assertEqual(statuscode, 200)
+        print("user tweets are returned")
+        print("_________________________________________________")
+        print(response.data)
 
-    #check for response 400, User entered Invalid tweet structure
-    def test_invalid_input(self):
+    #check for response 400, User entered Invalid tweetID
+    def test_invalid_ID_user_get_tweets_input(self):
         tester = app.test_client(self)
-        response = tester.post("/tweets",{})
+        print("_________________________________________________")
+        response = tester.get("/tweets/all?Id=")
         statuscode = response.status_code
         self.assertEqual(statuscode, 400)
+        print("invalid user id")
+        print("_________________________________________________")
+        print(response.data)
 
-    #check for response 404, User Doesnt Exist
-    def test_not_found(self):
+    #check for response 404, tweet Doesnt Exist
+    def test_get_user_tweets_not_found(self):
         tester = app.test_client(self)
-        response = tester.post("/tweets",{"user_id":"sgsgrrsgr",
-                                         "username":"",
-                                         "Text":""})
+        print("_________________________________________________")
+        response = tester.get("/tweets/all?Id=626551f44d5786f437cbb25b")
         statuscode = response.status_code
         self.assertEqual(statuscode, 404)
-        
-    #check for response 200, List of users returned successfully
+        print("user tweets are not found")
+        print("_________________________________________________")
+        print(response.data)
 
+    def test_get_user_tweet_success(self):
+        tester = app.test_client(self)
+        response = tester.get("/tweets/all/me")
+        print("_________________________________________________")
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 200)
+        print("my tweets are returned")
+        print("_________________________________________________")
+        print(response.data)
+
+    def test_post_tweet_success(self):
+        tester = app.test_client(self)
+        print("_________________________________________________")
+        response = tester.post("/tweets", data=json.dumps({
+            "text": "i am new here",
+            "images": [],
+            "videos": []
+        }),
+            content_type='application/json')
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 200)
+        print("_________________________________________________")
+        print(response.data)
+
+    def test_delete_tweet_success(self):
+        tester = app.test_client(self)
+        print("_________________________________________________")
+        response = tester.delete("/tweets?Id=626446fa02862861daa00931")
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 200)
+        print("_________________________________________________")
+        print(response.data)
+
+    #check for response 400, User entered Invalid tweetId
+    def test_delete_tweet_success(self):
+        tester = app.test_client(self)
+        print("_________________________________________________")
+        response = tester.delete("/tweets?Id=626446fa02862861daa00921")
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 404)
+        print("_________________________________________________")
+        print(response.data)
+
+    #check for response 400, User entered Invalid tweetId
+
+    
 
 
 if __name__ == "__main__":

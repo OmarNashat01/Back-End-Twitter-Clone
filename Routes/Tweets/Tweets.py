@@ -6,7 +6,7 @@ from bson import ObjectId
 Tweet_app = Blueprint("Tweet_app", __name__)
 
 
-@Tweet_app.route("/tweets", methods=["POST"])
+@Tweet_app.route("/", methods=["POST"])
 @token_required
 def create_tweet(current_user):
     json = request.json
@@ -25,7 +25,7 @@ def create_tweet(current_user):
         return {"404": "operation failed"}, 404
 
 
-@Tweet_app.route("/tweets/tweet_id", methods=["GET"])
+@Tweet_app.route("/tweet_id", methods=["GET"])
 @token_required
 def get_one_tweet(current_user):
     Id = str(request.args.get("Id", default=None, type=str))
@@ -38,7 +38,8 @@ def get_one_tweet(current_user):
         return {"400": "Invalid Id"}, 400
     t = t1.get_from_database(Id)
     ID = t1.user_id
-    user = col_of_users.find({"_id": ObjectId(ID)})
+    user = col_of_users.find_one({"_id": ObjectId(ID)})
+    print(t)
     if t is None:
         return {"404": "tweet is unavailable"}, 404
     return jsonify({"tweet_id": str(t1._id),
@@ -60,7 +61,7 @@ def get_one_tweet(current_user):
                     "comments": t1.comments}), 200
 
 
-@Tweet_app.route("/tweets/random", methods=["GET"])
+@Tweet_app.route("/random", methods=["GET"])
 @token_required
 def get_all_tweets(current_user):
     # number of tweets to return
@@ -79,7 +80,7 @@ def get_all_tweets(current_user):
     return {"Tweets": tweets.Tweets}, 200
 
 
-@Tweet_app.route("/tweets/all/me", methods=["GET"])
+@Tweet_app.route("/all/me", methods=["GET"])
 @token_required
 def get_all_user_tweets_tweets(current_user):
     # number of tweets to return
@@ -100,7 +101,7 @@ def get_all_user_tweets_tweets(current_user):
     return {"Tweets": tweets.Tweets}, 200
 
 
-@Tweet_app.route("/tweets/all", methods=["GET"])
+@Tweet_app.route("/all", methods=["GET"])
 @token_required
 def get_all_user_tweets(current_user):
     # number of tweets to return
@@ -122,7 +123,7 @@ def get_all_user_tweets(current_user):
     return {"Tweets": tweets.Tweets}, 200
 
 
-@Tweet_app.route("/tweets", methods=["DELETE"])
+@Tweet_app.route("/", methods=["DELETE"])
 @token_required
 def delete_one_tweet(current_user):
     #ID of tweet to delete
