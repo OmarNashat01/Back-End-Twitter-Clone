@@ -16,7 +16,7 @@ jobs:
         uses: isbang/compose-action@v1.0.0
         with:
           compose-file: './docker-compose.yaml'
-          down-flags: '--volumes'
+          down-flags: '--exit-code-from backend_test'
       - 
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
