@@ -6,3 +6,4 @@ pymongo==4.1.1
 pymongo[srv]
 bcrypt
 requests==2.25.1
+flask-cors
