@@ -1,7 +1,6 @@
 from flask import Flask,request,Response,jsonify,Blueprint
-import pymongo
+from flask_cors import cross_origin
 from bson.objectid import ObjectId
-import bson.json_util as json_util
 from Database.Database import Database as mydb
 import jwt
 from functools import wraps
@@ -33,6 +32,7 @@ def token_required(f):
     return decorated
 
 @followers.route("/users/followers")
+@cross_origin(allow_headers=['Content-Type'])
 @token_required
 def get_list_of_followers(current_user):
     user_id = request.args.get('user_id')

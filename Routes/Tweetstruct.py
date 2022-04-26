@@ -1,11 +1,11 @@
 from Database.Database import Database as Client
 from flask import Flask, request, jsonify
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Resource
 from pymongo import MongoClient
-from datetime import datetime, timedelta
+from datetime import datetime
 from bson import ObjectId
 from functools import wraps
-from jwt import decode, encode
+from jwt import decode
 
 app = Flask(__name__)
 x = Api(app)

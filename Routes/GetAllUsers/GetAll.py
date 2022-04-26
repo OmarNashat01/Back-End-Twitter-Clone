@@ -1,12 +1,9 @@
-from unicodedata import name
-import bcrypt
 from flask import Blueprint, request, Response, jsonify, render_template
 from pymongo import MongoClient
+from flask_cors import cross_origin
 import jwt
-import datetime
 from bson import ObjectId
 from functools import wraps
-from datetime import datetime
 from Database.Database import Database
 
 
@@ -45,6 +42,7 @@ def token_required(f):
 
 
 @GetAll.route("/all", methods=['GET'])
+@cross_origin(allow_headers=['Content-Type'])
 @token_required
 def GET_ALL(current_user):
     if current_user['admin'] == True:

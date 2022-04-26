@@ -1,12 +1,9 @@
-from posixpath import split
-from tracemalloc import start
-from flask import Flask,request,Response,jsonify,Blueprint
-import pymongo
+from flask import request, jsonify,Blueprint
+from flask_cors import cross_origin
 from bson.objectid import ObjectId
-import bson.json_util as json_util
 import datetime
 from Database.Database import Database as mydb
-from datetime import date, timedelta
+from datetime import timedelta
 import jwt
 from functools import wraps
 
@@ -37,6 +34,7 @@ def token_required(f):
     return decorated
     
 @new_accounts_count.route("/admin/statistics/new_account_count")
+@cross_origin(allow_headers=['Content-Type'])
 @token_required
 def number_of_newaccounts(current_user):
     start_datetime = request.args.get('start_date')

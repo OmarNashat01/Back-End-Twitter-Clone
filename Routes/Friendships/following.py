@@ -1,7 +1,6 @@
 from flask import Flask,request,Response,jsonify,Blueprint
-import pymongo
+from flask_cors import cross_origin
 from bson.objectid import ObjectId
-import bson.json_util as json_util
 from Database.Database import Database as mydb
 import jwt
 from functools import wraps
@@ -35,6 +34,7 @@ def token_required(f):
 
 
 @following.route("/users/following",methods=['GET','POST','DELETE'])
+@cross_origin(allow_headers=['Content-Type'])
 @token_required
 def follow_user(current_user):
     if request.method == 'POST':

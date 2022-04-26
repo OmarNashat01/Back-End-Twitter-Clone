@@ -1,12 +1,9 @@
-from unicodedata import name
 import bcrypt
-from flask import Blueprint, request, jsonify, url_for, render_template, Response
-from pymongo import MongoClient
+from flask import Blueprint, request, jsonify, render_template
+from flask_cors import cross_origin
 import datetime
 from flask_mail import Mail, Message
 import jwt
-from bson import ObjectId
-import requests
 import math, random
 from Database.Database import Database
 #from app import mail
@@ -36,6 +33,7 @@ def generateOTP():
 
 
 @signup.route("/verify", methods=["POST"])
+@cross_origin(allow_headers=['Content-Type'])
 def verify():   
     user_email = request.get_json()
     email = user_email["email"]

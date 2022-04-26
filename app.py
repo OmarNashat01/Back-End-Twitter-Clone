@@ -17,11 +17,10 @@ from Routes.get_me.get_me import get_me
 from Routes.get_user.get_user import get_user
 from Routes.update_user.update_user import update_user
 
-from Database.Database import Database
 
 
 # Creating flask application
-app = Flask(__name__)
+app = Flask(__name__, template_folder='Templates')
 app.config.from_pyfile('config.cfg')
 mail.init_app(app)
 CORS(app)
@@ -41,16 +40,7 @@ app.register_blueprint(get_me, url_prefix='/users')
 app.register_blueprint(get_user, url_prefix='/users')
 app.register_blueprint(update_user, url_prefix='/users')
 
-@app.route("/", methods=["GET"])
-def home():
-
-    print("hawhawhaw")
-
-    users = Database.User.find_one({},{"username":1,"_id":0})
-    uname= users['username']
-
-    return uname
 
 # Running the application
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

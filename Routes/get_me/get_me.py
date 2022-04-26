@@ -1,11 +1,8 @@
 from flask_restful import Resource, Api, reqparse
-import bcrypt
 from flask import Flask, request, Response, jsonify, Blueprint
-from bson import json_util
+from flask_cors import cross_origin
 from bson.objectid import ObjectId
-import pymongo
 import jwt
-import datetime
 import json
 from functools import wraps
 from Database.Database import Database as mydb
@@ -49,6 +46,7 @@ def token_required(f):
 ############################################
 
 @get_me.route("/me", methods=["GET"])
+@cross_origin(allow_headers=['Content-Type'])
 @token_required
 def me(current_user):
 
