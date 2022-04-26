@@ -12,15 +12,10 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
-#       -
-#         uses: isbang/compose-action@v1.0.0
-#         with:
-#           compose-file: './docker-compose.yaml'
-#           down-flags: '--exit-code-from backend_test'
-      - 
-        name: test
-        run: OUTPUT=$(docker-compose up --exit-code-from backend_test | tail -1) && echo $OUTPUT
-        shell: bash
+#       - 
+#         name: test
+#         run: OUTPUT=$(docker-compose up --exit-code-from backend_test | tail -1) && echo $OUTPUT
+#         shell: bash
       -
         name: Set up QEMU
         if: steps.main.outputs.OUTPUT == 0
