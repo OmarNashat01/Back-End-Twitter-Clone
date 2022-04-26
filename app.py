@@ -1,5 +1,5 @@
 from flask import Flask
-
+from flask_cors import CORS
 
 #Importing all Routes
 
@@ -13,13 +13,13 @@ from Routes.Login.Login import Login
 from Routes.GetAllUsers.GetAll import GetAll
 from Routes.Signup.signup import signup, mail
 
-from Database.Database import Database
 
 
 # Creating flask application
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
 mail.init_app(app)
+CORS(app)
 
 
 # Registering all the blue prints created in other files
@@ -33,15 +33,6 @@ app.register_blueprint(retweets_count, url_prefix='/admin/statistics/retweet_cou
 app.register_blueprint(Tweet_app,url_prefix='/tweets')
 app.register_blueprint(Tweet_stats,url_prefix='/admin/statistics/')
 
-@app.route("/", methods=["GET"])
-def home():
-
-    print("hawhawhaw")
-
-    users = Database.User.find_one({},{"username":1,"_id":0})
-    uname= users['username']
-
-    return uname
 
 # Running the application
 if __name__ == '__main__':
