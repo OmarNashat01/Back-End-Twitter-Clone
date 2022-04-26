@@ -173,6 +173,69 @@ class TestTweets(unittest.TestCase):
         print(response)
 
 
+class TestUsers(unittest.TestCase):
+
+    # check for response 200, user returned successfully
+    def test_get_user_success(self):
+        print("_________________________________________________")
+        tester = app.test_client(self)
+        response = tester.get(
+            "/users/user_id?_id=626551f44d5786f437cbb25b", headers=header)
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 200)
+        print("user is returned")
+        print("_________________________________________________")
+        print(response.status_code)
+        print(response)
+
+    # check for response 404, User ID not found
+    def test_get_user_not_found(self):
+        tester = app.test_client(self)
+        print("_________________________________________________")
+        response = tester.get(
+            "/users/user_id?_id=626551f44d5786f437cbb259", headers=header)
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 404)
+        print("User ID not found")
+        print("_________________________________________________")
+        print(response.status_code)
+        print(response)
+
+    # check for response 200, me returned successfully
+    def test_get_me_success(self):
+        print("_________________________________________________")
+        tester = app.test_client(self)
+        response = tester.get(
+            "/users/me", headers=header)
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 200)
+        print("Me is returned")
+        print("_________________________________________________")
+        print(response.status_code)
+        print(response)
+
+    # check for response 200, User updated successfully
+    def test_update_user_success(self):
+        print("_________________________________________________")
+        tester = app.test_client(self)
+        response = tester.put("/users/update_profile", data=json.dumps({
+            "name": "SHAHD",
+            "date_of_birth": "2002-04-25",
+            "bio": "i love painting",
+            "location": "cairo, egypt",
+            "website": "www.mywebsite.com",
+            "prof_pic_url": "https://pbs.twimg.com/media/EEI178KWsAEC79p.jpg",
+            "cover_pic_url": "https://i.pinimg.com/564x/a2/64/b4/a264b464b6fd6138d972448e19ba764d.jpg"
+        }),
+            content_type='application/json', headers=header)
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 200)
+        print("User has been updated")
+        print("_________________________________________________")
+        print(response.status_code)
+        print(response)
+
+
 if __name__ == "__main__":
     unittest.main()
     # if successful_tests != no_of_tests:
