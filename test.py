@@ -227,7 +227,7 @@ class TestUsers(unittest.TestCase):
             "prof_pic_url": "https://pbs.twimg.com/media/EEI178KWsAEC79p.jpg",
             "cover_pic_url": "https://i.pinimg.com/564x/a2/64/b4/a264b464b6fd6138d972448e19ba764d.jpg"
         }),
-        content_type='application/json', headers=header)
+            content_type='application/json', headers=header)
         statuscode = response.status_code
         self.assertEqual(statuscode, 200)
         print("User has been updated")
