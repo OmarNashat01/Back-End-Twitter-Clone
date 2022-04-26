@@ -1,0 +1,16 @@
+
+Database/__pycache__/Database.cpython-37.pyc
+Routes/__pycache__/__init__.cpython-37.pyc
+Routes/__pycache__/Tweetstruct.cpython-37.pyc
+Routes/Friendships/__pycache__/followers.cpython-37.pyc
+Routes/Friendships/__pycache__/following.cpython-37.pyc
+Routes/get_me/__pycache__/get_me.cpython-37.pyc
+Routes/get_user/__pycache__/get_user.cpython-37.pyc
+Routes/GetAllUsers/__pycache__/GetAll.cpython-37.pyc
+Routes/Login/__pycache__/Login.cpython-37.pyc
+Routes/Signup/__pycache__/signup.cpython-37.pyc
+Routes/Statistics/__pycache__/new_accounts.cpython-37.pyc
+Routes/Statistics/__pycache__/retweets_count.cpython-37.pyc
+Routes/Tweet_Statistics/__pycache__/tweet_stats.cpython-37.pyc
+Routes/Tweets/__pycache__/Tweets.cpython-37.pyc
+Routes/update_user/__pycache__/update_user.cpython-37.pyc

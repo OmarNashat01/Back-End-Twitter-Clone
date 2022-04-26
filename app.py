@@ -12,6 +12,9 @@ from Routes.Tweets.Tweets import Tweet_app
 from Routes.Login.Login import Login
 from Routes.GetAllUsers.GetAll import GetAll
 from Routes.Signup.signup import signup, mail
+from Routes.get_me.get_me import get_me
+from Routes.get_user.get_user import get_user
+from Routes.update_user.update_user import update_user
 
 from Database.Database import Database
 
@@ -32,6 +35,9 @@ app.register_blueprint(new_accounts_count, url_prefix='/admin/statistics/new_acc
 app.register_blueprint(retweets_count, url_prefix='/admin/statistics/retweet_count')
 app.register_blueprint(Tweet_app,url_prefix='/tweets')
 app.register_blueprint(Tweet_stats,url_prefix='/admin/statistics/')
+app.register_blueprint(get_me, url_prefix='/users')
+app.register_blueprint(get_user, url_prefix='/users')
+app.register_blueprint(update_user, url_prefix='/users')
 
 @app.route("/", methods=["GET"])
 def home():
