@@ -38,6 +38,7 @@ jobs:
         name: Build
         run: |
           docker build -t backend_twitterclone_test . # will run buildx
+          docker images
           docker tag backend_twitterclone_test omarnashat01/backend_twitterclone_test:latest
       - name: PushtoDocker
         run: |
