@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 
+
 #Importing all Routes
 
 from Routes.Friendships.followers import followers
@@ -22,7 +23,8 @@ from Routes.update_user.update_user import update_user
 app = Flask(__name__, template_folder='Templates')
 app.config.from_pyfile('config.cfg')
 mail.init_app(app)
-CORS(app, resources=r'/*')
+CORS(app)
+
 
 # Registering all the blue prints created in other files
 app.register_blueprint(Login, url_prefix='/Login')
