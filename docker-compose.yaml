@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+
+  backend_test:
+    build: 
+      context: .
+      dockerfile: TestDockerfile
+
+    ports:
+      - 5000:5000
