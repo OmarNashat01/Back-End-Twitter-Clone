@@ -19,11 +19,10 @@ from Routes.update_user.update_user import update_user
 
 
 # Creating flask application
-app = Flask(__name__)
+app = Flask(__name__, template_folder='Templates')
 app.config.from_pyfile('config.cfg')
 mail.init_app(app)
-CORS(app)
-
+CORS(app, resources=r'/*')
 
 # Registering all the blue prints created in other files
 app.register_blueprint(Login, url_prefix='/Login')
@@ -42,4 +41,4 @@ app.register_blueprint(update_user, url_prefix='/users')
 
 # Running the application
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

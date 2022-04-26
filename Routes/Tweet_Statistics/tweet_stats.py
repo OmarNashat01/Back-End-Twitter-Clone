@@ -1,12 +1,14 @@
 from Routes.Tweetstruct import col_of_stats,Client,objectid_of_like_dates,col_of_tweets,token_required,Date,getDifference
 from flask import Blueprint, request, jsonify
+from flask_cors import cross_origin
 from datetime import datetime,timedelta
 from bson import ObjectId
 
 Tweet_stats = Blueprint("Tweet_stats", __name__)
 
 
-@Tweet_stats.route("like_count", methods=["GET"])
+@Tweet_stats.route("/like_count", methods=["GET"])
+@cross_origin(allow_headers=['Content-Type'])
 @token_required
 def get_like_count_using_a_query(current_user):
     if current_user["admin"] == False:
@@ -54,6 +56,7 @@ def get_like_count_using_a_query(current_user):
 
 
 @Tweet_stats.route("/tweet_count", methods=["GET"])
+@cross_origin(allow_headers=['Content-Type'])
 @token_required
 def get_tweet_count_using_a_query(current_user):
     if current_user["admin"] == False:

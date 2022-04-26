@@ -1,9 +1,7 @@
 
-from pickle import NONE
-from unicodedata import name
 import bcrypt
-from flask import Blueprint, request, Response, jsonify
-from pymongo import MongoClient
+from flask import Blueprint, request, jsonify
+from flask_cors import cross_origin
 import jwt
 import datetime
 from Database.Database import Database
@@ -16,7 +14,8 @@ Login = Blueprint("Login" ,__name__)
 
 
 
-@Login.route("", methods=['POST'])
+@Login.route("/", methods=['POST'])
+@cross_origin(allow_headers=['Content-Type'])
 def Home():
    
     Login_data = request.get_json()
