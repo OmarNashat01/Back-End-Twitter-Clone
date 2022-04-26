@@ -15,3 +15,7 @@ Routes/Tweet_Statistics/__pycache__/tweet_stats.cpython-37.pyc
 Routes/Tweets/__pycache__/Tweets.cpython-37.pyc
 Routes/update_user/__pycache__/update_user.cpython-37.pyc
 __pycache__/app.cpython-37.pyc
+Routes/Friendships/__pycache__/followers.cpython-39.pyc
+Routes/Friendships/__pycache__/followers.cpython-39.pyc
+Routes/Friendships/__pycache__/following.cpython-39.pyc
+Routes/Friendships/__pycache__/followers.cpython-39.pyc

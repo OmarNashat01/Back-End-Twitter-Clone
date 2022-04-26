@@ -3,15 +3,38 @@ import pymongo
 from bson.objectid import ObjectId
 import bson.json_util as json_util
 from Database.Database import Database as mydb
-
+import jwt
+from functools import wraps
 # myclient = pymongo.MongoClient("mongodb+srv://karimhafez:KojGCyxxTJXTYKYV@cluster0.buuqk.mongodb.net/twitter?retryWrites=true&w=majority", connect=True)
 # mydb = myclient["Twitter_new"]
 # app = Flask(__name__)
 
 followers = Blueprint('followers', __name__)
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+
+        try:
+            data = jwt.decode(token, "SecretKey1911", "HS256")
+            user_id = ObjectId(data['_id'])
+            current_user = mydb.User.find_one({'_id': user_id})
+
+        except:
+            return jsonify({'message': 'Token is invalid!'}), 401
+
+        return f(current_user, *args, **kwargs)
+
+    return decorated
 
 @followers.route("/users/followers")
-def get_list_of_followers():
+@token_required
+def get_list_of_followers(current_user):
     user_id = request.args.get('user_id')
     try:
         objInstance_user = ObjectId(user_id)

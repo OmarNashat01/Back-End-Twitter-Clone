@@ -7,14 +7,38 @@ import bson.json_util as json_util
 import datetime
 from Database.Database import Database as mydb
 from datetime import date, timedelta
+import jwt
+from functools import wraps
 
 # myclient = pymongo.MongoClient("mongodb+srv://karimhafez:KojGCyxxTJXTYKYV@cluster0.buuqk.mongodb.net/twitter?retryWrites=true&w=majority", connect=True)
 # mydb = myclient["Twitter_new"]
 # app = Flask(__name__)
 new_accounts_count = Blueprint('new_accounts_count', __name__)
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
 
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+
+        try:
+            data = jwt.decode(token, "SecretKey1911", "HS256")
+            user_id = ObjectId(data['_id'])
+            current_user = mydb.User.find_one({'_id': user_id})
+
+        except:
+            return jsonify({'message': 'Token is invalid!'}), 401
+
+        return f(current_user, *args, **kwargs)
+
+    return decorated
+    
 @new_accounts_count.route("/admin/statistics/new_account_count")
-def number_of_newaccounts():
+@token_required
+def number_of_newaccounts(current_user):
     start_datetime = request.args.get('start_date')
     end_datetime = request.args.get('end_date') 
     try:
