@@ -6,7 +6,7 @@ from bson import ObjectId
 Tweet_stats = Blueprint("Tweet_stats", __name__)
 
 
-@Tweet_stats.route("/admin/statistics/like_count", methods=["GET"])
+@Tweet_stats.route("like_count", methods=["GET"])
 @token_required
 def get_like_count_using_a_query(current_user):
     if current_user["admin"] == False:
@@ -53,7 +53,7 @@ def get_like_count_using_a_query(current_user):
         return {"Number_of_likes": countsarray}, 200
 
 
-@Tweet_stats.route("/admin/statistics/tweet_count", methods=["GET"])
+@Tweet_stats.route("/tweet_count", methods=["GET"])
 @token_required
 def get_tweet_count_using_a_query(current_user):
     if current_user["admin"] == False:

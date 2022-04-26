@@ -38,7 +38,8 @@ def get_one_tweet(current_user):
         return {"400": "Invalid Id"}, 400
     t = t1.get_from_database(Id)
     ID = t1.user_id
-    user = col_of_users.find({"_id": ObjectId(ID)})
+    user = col_of_users.find_one({"_id": ObjectId(ID)})
+    print(t)
     if t is None:
         return {"404": "tweet is unavailable"}, 404
     return jsonify({"tweet_id": str(t1._id),

@@ -10,39 +10,39 @@ from jwt import decode, encode
 app = Flask(__name__)
 x = Api(app)
 
-
+client = MongoClient(
+    "mongodb+srv://karimhafez:KojGCyxxTJXTYKYV@cluster0.buuqk.mongodb.net/twitter?retryWrites=true&w=majority")
 
 objectid_of_like_dates = "625ad8751b0d674357495ccd"
 
-db = Client["Twitter_new"]
+db = client["Twitter_new"]
 col_of_tweets = db["tweets"]
 col_of_retweets = db["tweets"]
 col_of_stats = db["stats"]
 col_of_users = db["User"]
-
+print(Client)
 
 def token_required(f):
-   @wraps(f)
-   def decorated(*args, **kwargs):
-    token = None
-    expiry_Date_token = encode(
-        {'exp': datetime.utcnow()}, "1234")
-    if 'x-access-token' in request.headers:
-       token = request.headers['x-access-token']
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
 
-    if not token:
-       return jsonify({'message': 'Token is missing!'}), 401
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
 
-    try:
-       data = decode(token, "SecretKey1911", "HS256")
-       user_id = ObjectId(data['user_id'])
-       current_user = col_of_users.find_one({'_id': user_id})
-    except:
-       return jsonify({'message': 'Token expired!'}), 401
+        try:
+            data = decode(token, "SecretKey1911", "HS256")
+            user_id = ObjectId(data['_id'])
+            current_user = col_of_users.find_one({'_id': user_id})
 
-    return f(current_user, *args, **kwargs)
+        except:
+            return jsonify({'message': 'Token is invalid!'}), 401
 
-   return decorated
+        return f(current_user, *args, **kwargs)
+
+    return decorated
 
 # days between two given dates
 
