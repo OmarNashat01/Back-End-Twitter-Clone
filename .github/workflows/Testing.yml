@@ -19,9 +19,8 @@ jobs:
           down-flags: '--exit-code-from backend_test'
       - 
         name: test
-        run: 
-            OUTPUT=$(go run docker-compose up --exit-code-from backend_test | tail -1) &&
-            echo "::set-output name=OUTPUT::$OUTPUT"
+        run: OUTPUT=$(docker-compose up --exit-code-from backend_test | tail -1) && echo $OUTPUT
+        shell: bash
       -
         name: Set up QEMU
         if: steps.main.outputs.OUTPUT == 0
