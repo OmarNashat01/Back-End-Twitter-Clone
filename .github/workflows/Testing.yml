@@ -31,4 +31,4 @@ jobs:
           tags: user/backend_twitterclone_test:latest
       -
         name: push manually
-        run: docker push backend_twitterclone_test:latest
+        run: docker push ${{ env.IMAGE }}:${{ env.GIT_SHA }}
