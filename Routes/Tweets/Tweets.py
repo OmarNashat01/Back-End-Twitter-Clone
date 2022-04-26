@@ -1,4 +1,4 @@
-from Routes.Tweetstruct import Tweet, collectionoftweets, token_required,col_of_users
+from Routes.Tweetstruct import Tweet, collectionoftweets, token_required, col_of_users
 from flask import Blueprint, request, jsonify
 from datetime import datetime
 from bson import ObjectId
@@ -6,23 +6,42 @@ from bson import ObjectId
 Tweet_app = Blueprint("Tweet_app", __name__)
 
 
-@Tweet_app.route("/", methods=["POST"])
+@Tweet_app.route("/", methods=["POST", "DELETE"])
 @token_required
 def create_tweet(current_user):
-    json = request.json
-    tweet = None
-    tweet = Tweet(None, current_user["_id"],
-                  json["text"], json["videos"], json["images"])
-    print(current_user["_id"])
-    tweet.set_pic(current_user["prof_pic_url"])
-    tweet.set_name(current_user["username"])
-    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
-    if json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text is "" and tweet.videos_urls is [] and tweet.images_urls is []):
-        return {"400", "Invalid parameters"}, 400
-    if tweet.save_to_database() is False:
-        return {"200": "successfull tweet creation"}, 200
-    else:
-        return {"404": "operation failed"}, 404
+    if request.method == 'POST':
+        json = request.json
+        tweet = None
+        tweet = Tweet(None, current_user["_id"],
+                      json["text"], json["videos"], json["images"])
+        print(current_user["_id"])
+        tweet.set_pic(current_user["prof_pic_url"])
+        tweet.set_name(current_user["username"])
+        tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
+        if json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text is "" and tweet.videos_urls is [] and tweet.images_urls is []):
+            return {"400", "Invalid parameters"}, 400
+        if tweet.save_to_database() is False:
+            return {"200": "successfull tweet creation"}, 200
+        else:
+            return {"404": "operation failed"}, 404
+
+    elif request.method == 'DELETE':
+
+        # ID of tweet to delete
+        Id = request.args.get("Id", default=None, type=str)
+        try:
+            ObjectId(Id)
+        except:
+            return {"400": "Invalid Id"}, 400
+        # condtions to make sure the Id entered is in the database and atomicaly can be a valid number or string
+        if Id == None:
+            return {"400": "Invalid Id"}, 400
+        if Tweet.get_from_database_json(ObjectId(Id)) == None:
+            return {"404": "operation failed,tweet doesn't exist in database"}, 404
+        Tweet.delete_from_database(ObjectId(Id))
+        if Tweet.get_from_database_json(ObjectId(Id)) != None:
+            return jsonify({"404": "delete operation is unavailable"}), 404
+        return jsonify({"200": "successfull operation,tweet was deleted"}), 200
 
 
 @Tweet_app.route("/tweet_id", methods=["GET"])
@@ -107,7 +126,10 @@ def get_all_user_tweets(current_user):
     # number of tweets to return
     Id = str(request.args.get("Id", default=None, type=str))
     pag_token = request.args.get("page", default=1, type=int)
-    _id = ObjectId(Id)
+    try:
+        _id = ObjectId(Id)
+    except:
+        return {"400": "Invalid ID"}, 400
     tweets = collectionoftweets()
     if tweets.Tweets != []:
         tweets.Tweets = []
@@ -121,23 +143,3 @@ def get_all_user_tweets(current_user):
         return {"Tweets": tweets.Tweets}, 201
 
     return {"Tweets": tweets.Tweets}, 200
-
-
-@Tweet_app.route("/", methods=["DELETE"])
-@token_required
-def delete_one_tweet(current_user):
-    #ID of tweet to delete
-    Id = request.args.get("Id", default=None, type=str)
-    try:
-        ObjectId(Id)
-    except:
-        return {"400": "Invalid Id"}, 400
-    #condtions to make sure the Id entered is in the database and atomicaly can be a valid number or string
-    if Id == None:
-        return {"400": "Invalid Id"}, 400
-    if Tweet.get_from_database_json(ObjectId(Id)) == None:
-        return {"404": "operation failed,tweet doesn't exist in database"}, 404
-    Tweet.delete_from_database(ObjectId(Id))
-    if Tweet.get_from_database_json(ObjectId(Id)) != None:
-        return jsonify({"404": "delete operation is unavailable"}), 404
-    return jsonify({"200": "successfull operation,tweet was deleted"}), 200
