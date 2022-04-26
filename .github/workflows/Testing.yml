@@ -18,6 +18,9 @@ jobs:
           compose-file: './docker-compose.yaml'
           down-flags: '--exit-code-from backend_test'
       - 
+        name: test
+        run: echo $?
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       -
