@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 
 #Importing all Routes
@@ -23,6 +24,7 @@ from Database.Database import Database
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
 mail.init_app(app)
+CORS(app)
 
 
 # Registering all the blue prints created in other files
