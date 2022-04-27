@@ -23,210 +23,210 @@ codes = [200,400]
 class TestRetweetCounts(unittest.TestCase):
     
     #check for response 200, List of users returned successfully
-    def test_success(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18",headers = header)
-        statuscode = response.status_code
-        self.assertEqual(statuscode , 200)
-        print(response)
-        print("_________________________________________________")
-        print("retweet count success")
+#     def test_success(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18",headers = header)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode , 200)
+#         print(response)
+#         print("_________________________________________________")
+#         print("retweet count success")
 
-    def test_invalid_input(self):
-        tester = app.test_client(self)
-        response= tester.get("admin/statistics/retweet_count?start_date=20220415&end_date=20220417",headers = header)
-        statuscode = response.status_code
-        self.assertEqual(statuscode , 400)
-        print(response)
-        print("_________________________________________________")
-        print("retweet count failure due to invalid input")
+#     def test_invalid_input(self):
+#         tester = app.test_client(self)
+#         response= tester.get("admin/statistics/retweet_count?start_date=20220415&end_date=20220417",headers = header)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode , 400)
+#         print(response)
+#         print("_________________________________________________")
+#         print("retweet count failure due to invalid input")
 
-    def test_response_content_type(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18",headers = header)
-        cont_type = response.content_type
-        self.assertEqual(cont_type , "application/json")
-        print(response)
-        print("_________________________________________________")
-        print("retweet count returned  content type is valid")
+#     def test_response_content_type(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18",headers = header)
+#         cont_type = response.content_type
+#         self.assertEqual(cont_type , "application/json")
+#         print(response)
+#         print("_________________________________________________")
+#         print("retweet count returned  content type is valid")
 
-    #check if returned users are right
-    # def test_data(self):
-    #     tester = app.test_client(self)
-    #     response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18")
-    #     data_returned = response.get_json()
-    #     print("******************************")
-    #     print(data_returned)
-    #     self.assertEqual(data_returned,{"Number of retweets": 2})
-class TestNewAccounts(unittest.TestCase):
-    def test_success(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response = tester.get(
-            "admin/statistics/new_account_count?start_date=2022-04-15&end_date=2022-04-17", headers=header)
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
-        print(response)
-        print("_________________________________________________")
-        print("new account count returned successfully")
+#     #check if returned users are right
+#     # def test_data(self):
+#     #     tester = app.test_client(self)
+#     #     response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18")
+#     #     data_returned = response.get_json()
+#     #     print("******************************")
+#     #     print(data_returned)
+#     #     self.assertEqual(data_returned,{"Number of retweets": 2})
+# class TestNewAccounts(unittest.TestCase):
+#     def test_success(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.get(
+#             "admin/statistics/new_account_count?start_date=2022-04-15&end_date=2022-04-17", headers=header)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 200)
+#         print(response)
+#         print("_________________________________________________")
+#         print("new account count returned successfully")
 
-    def test_invalid_input(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response = tester.get(
-            "admin/statistics/new_account_count?start_date=20220415&end_date=20220417", headers=header)
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 400)
-        print(response)
-        print("new account invalid input test")
+#     def test_invalid_input(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.get(
+#             "admin/statistics/new_account_count?start_date=20220415&end_date=20220417", headers=header)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 400)
+#         print(response)
+#         print("new account invalid input test")
 
-    def test_response_content_type(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response = tester.get(
-            "admin/statistics/new_account_count?start_date=2022-04-15&end_date=2022-04-17", headers=header)
-        cont_type = response.content_type
-        self.assertEqual(cont_type, "application/json")
-        print("new account count returned content type is valid")
+#     def test_response_content_type(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.get(
+#             "admin/statistics/new_account_count?start_date=2022-04-15&end_date=2022-04-17", headers=header)
+#         cont_type = response.content_type
+#         self.assertEqual(cont_type, "application/json")
+#         print("new account count returned content type is valid")
 
-    #check if returned users are right
-    # def test_data(self):
-    #     tester = app.test_client(self)
-    #     response= tester.get("/admin/statistics/new_account_count?start_date=2022-04-15&end_date=2022-04-17",headers = header)
-    #     data_returned = response.get_json()
-    #     print("******************************")
-    #     print(data_returned)
-    #     self.assertEqual(data_returned,{"Number of created Users": 3})
-class TestFollowUser(unittest.TestCase):
-    def test_success(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response = tester.post("/users/following", json=data, headers=header)
-        statuscode = response.status_code
-        self.assertIn(statuscode,codes)
-        print("_________________________________________________")
-        print("user follow returned successfully")
-        print(response)
-## Uncomment to try to follow once otherwise it will return used followed
+#     #check if returned users are right
+#     # def test_data(self):
+#     #     tester = app.test_client(self)
+#     #     response= tester.get("/admin/statistics/new_account_count?start_date=2022-04-15&end_date=2022-04-17",headers = header)
+#     #     data_returned = response.get_json()
+#     #     print("******************************")
+#     #     print(data_returned)
+#     #     self.assertEqual(data_returned,{"Number of created Users": 3})
+# class TestFollowUser(unittest.TestCase):
+#     def test_success(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.post("/users/following", json=data, headers=header)
+#         statuscode = response.status_code
+#         self.assertIn(statuscode,codes)
+#         print("_________________________________________________")
+#         print("user follow returned successfully")
+#         print(response)
+# ## Uncomment to try to follow once otherwise it will return used followed
 
-    # def test_response_data(self):
-    #     tester = app.test_client(self)
-    #     response= tester.post("/users/following",json = data)
-    #     data_returned = response.get_json()
-    #     print("******************************")
-    #     print(data_returned)
-    #     self.assertEqual(data_returned,{"Message": "Sucessfully followed the user"})
+#     # def test_response_data(self):
+#     #     tester = app.test_client(self)
+#     #     response= tester.post("/users/following",json = data)
+#     #     data_returned = response.get_json()
+#     #     print("******************************")
+#     #     print(data_returned)
+#     #     self.assertEqual(data_returned,{"Message": "Sucessfully followed the user"})
 
 
-class TestFollowingList(unittest.TestCase):
-    def test_success(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response = tester.get(
-            "/users/following?user_id=626551f44d5786f437cbb25b", headers=header)
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
-        print("_________________________________________________")
-        print(response.status_code)
-        print(response)
-        print("following returned successfully")
-        print("_________________________________________________")
+# class TestFollowingList(unittest.TestCase):
+#     def test_success(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.get(
+#             "/users/following?user_id=626551f44d5786f437cbb25b", headers=header)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 200)
+#         print("_________________________________________________")
+#         print(response.status_code)
+#         print(response)
+#         print("following returned successfully")
+#         print("_________________________________________________")
 
-    def test_not_found(self):
-        tester = app.test_client(self)
-        response = tester.get(
-            "/users/following?user_id=625560f7e10c0b48c19d2cb0", headers=header)
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 404)
-        print("_________________________________________________")
-        print(response.status_code)
-        print(response)
-        print("user not found")
-        print("_________________________________________________")
+#     def test_not_found(self):
+#         tester = app.test_client(self)
+#         response = tester.get(
+#             "/users/following?user_id=625560f7e10c0b48c19d2cb0", headers=header)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 404)
+#         print("_________________________________________________")
+#         print(response.status_code)
+#         print(response)
+#         print("user not found")
+#         print("_________________________________________________")
 
-    # def test_no_following(self):
-    #     tester = app.test_client(self)
-    #     response= tester.get("/users/following?user_id=625560c0e10c0b48c19d2cb5")
-    #     statuscode = response.status_code
-    #     self.assertEqual(statuscode , 204)
-    #     print("_________________________________________________")
-    #     print("User have no followers")
+#     # def test_no_following(self):
+#     #     tester = app.test_client(self)
+#     #     response= tester.get("/users/following?user_id=625560c0e10c0b48c19d2cb5")
+#     #     statuscode = response.status_code
+#     #     self.assertEqual(statuscode , 204)
+#     #     print("_________________________________________________")
+#     #     print("User have no followers")
 
-    def test_response_content_type(self):
-        tester = app.test_client(self)
-        response = tester.get(
-            "/users/following?user_id=626551f44d5786f437cbb25b", headers=header)
-        cont_type = response.content_type
-        self.assertEqual(cont_type, "application/json")
-        print("_________________________________________________")
-        print(response.status_code)
-        print(response)
-        print("Valid data returned")
-        print("_________________________________________________")
+#     def test_response_content_type(self):
+#         tester = app.test_client(self)
+#         response = tester.get(
+#             "/users/following?user_id=626551f44d5786f437cbb25b", headers=header)
+#         cont_type = response.content_type
+#         self.assertEqual(cont_type, "application/json")
+#         print("_________________________________________________")
+#         print(response.status_code)
+#         print(response)
+#         print("Valid data returned")
+#         print("_________________________________________________")
 
-    #check if returned users are right
-    # def test_data(self):
-    #     tester = app.test_client(self)
-    #     response= tester.get("/users/following?user_id=625560f7e10c0b48c19d2cb6")
-    #     data_returned = response.get_json()
-    #     self.assertEqual(data_returned,karim_user)
-    #     print("******************************")
-    #     print(data_returned)
-class TestFollowersList(unittest.TestCase):
+#     #check if returned users are right
+#     # def test_data(self):
+#     #     tester = app.test_client(self)
+#     #     response= tester.get("/users/following?user_id=625560f7e10c0b48c19d2cb6")
+#     #     data_returned = response.get_json()
+#     #     self.assertEqual(data_returned,karim_user)
+#     #     print("******************************")
+#     #     print(data_returned)
+# class TestFollowersList(unittest.TestCase):
 
-    #check for response 200, List of users returned successfully
-    def test_success(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response = tester.get(
-            "/users/followers?user_id=626552274d5786f437cbb25c", headers=header)
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
-        print(response.status_code)
-        print(response)
-        print("followers retrieval of user followers success")
-        print("_________________________________________________")
+#     #check for response 200, List of users returned successfully
+#     def test_success(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.get(
+#             "/users/followers?user_id=626552274d5786f437cbb25c", headers=header)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 200)
+#         print(response.status_code)
+#         print(response)
+#         print("followers retrieval of user followers success")
+#         print("_________________________________________________")
 
-    def test_not_found(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response = tester.get(
-            "/users/followers?user_id=625560f7e10c0b48c19d2cb0", headers=header1)
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 404)
-        print(response.status_code)
-        print(response)
-        print("tests if user does not exist through followers retrieval")
-        print("_________________________________________________")
+#     def test_not_found(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.get(
+#             "/users/followers?user_id=625560f7e10c0b48c19d2cb0", headers=header1)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 404)
+#         print(response.status_code)
+#         print(response)
+#         print("tests if user does not exist through followers retrieval")
+#         print("_________________________________________________")
 
-    # def test_no_followers(self):
-    #     tester = app.test_client(self)
-    #     response= tester.get("/users/followers?user_id=625560c0e10c0b48c19d2cb5")
-    #     statuscode = response.status_code
-    #     self.assertEqual(statuscode , 204)
+#     # def test_no_followers(self):
+#     #     tester = app.test_client(self)
+#     #     response= tester.get("/users/followers?user_id=625560c0e10c0b48c19d2cb5")
+#     #     statuscode = response.status_code
+#     #     self.assertEqual(statuscode , 204)
 
-    def test_response_content_type(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response = tester.get(
-            "/users/followers?user_id=626552274d5786f437cbb25c", headers=header1)
-        cont_type = response.content_type
-        self.assertEqual(cont_type, "application/json")
-        print(response.status_code)
-        print(response)
-        print("followers retrieval of user followers success")
+#     def test_response_content_type(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.get(
+#             "/users/followers?user_id=626552274d5786f437cbb25c", headers=header1)
+#         cont_type = response.content_type
+#         self.assertEqual(cont_type, "application/json")
+#         print(response.status_code)
+#         print(response)
+#         print("followers retrieval of user followers success")
         
 
-    #check if returned users are right
-    # def test_data(self):
-    #     tester = app.test_client(self)
-    #     response= tester.get("/users/followers?user_id=626552274d5786f437cbb25c")
-    #     data_returned = response.get_json()
-    #     print("******************************")
-    #     print(data_returned)
-    #     self.assertEqual(data_returned,karim_user)
+#     #check if returned users are right
+#     # def test_data(self):
+#     #     tester = app.test_client(self)
+#     #     response= tester.get("/users/followers?user_id=626552274d5786f437cbb25c")
+#     #     data_returned = response.get_json()
+#     #     print("******************************")
+#     #     print(data_returned)
+#     #     self.assertEqual(data_returned,karim_user)
 class TestTweets(unittest.TestCase):
     # check for response 200, tweet returned successfully
 
