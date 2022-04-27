@@ -237,6 +237,6 @@ class TestUsers(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+#     unittest.main()
     # if successful_tests != no_of_tests:
     #     print(f"{(successful_tests/no_of_tests)*100}%")
