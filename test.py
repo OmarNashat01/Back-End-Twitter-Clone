@@ -20,7 +20,7 @@ data = {"source_user_id": "626551f44d5786f437cbb25b",
         "target_user_id": "6265b8efc557bc4aa2f038ab"}
 codes = [200,400]
 
-class TestRetweetCounts(unittest.TestCase):
+# class TestRetweetCounts(unittest.TestCase):
     
     #check for response 200, List of users returned successfully
 #     def test_success(self):
