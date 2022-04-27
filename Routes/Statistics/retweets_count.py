@@ -1,6 +1,7 @@
 from posixpath import split
 from tracemalloc import start
 from flask import Flask,request,Response,jsonify,Blueprint
+from flask_cors import cross_origin
 import pymongo
 from bson.objectid import ObjectId
 import bson.json_util as json_util
