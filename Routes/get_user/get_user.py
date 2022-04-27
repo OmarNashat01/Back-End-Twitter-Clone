@@ -76,9 +76,9 @@ def singleuser(current_user):
             status=200,
             mimetype="application/json")
     except Exception as ex:
-        print("**********")
+        print("*********")
         print(ex)
-        print("**********")
+        print("*********")
         return Response(
             response=json.dumps(
                 {"message": "User ID not found"
