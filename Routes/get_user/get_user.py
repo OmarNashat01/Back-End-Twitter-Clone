@@ -45,7 +45,7 @@ def token_required(f):
 ############################################
 
 @get_user.route("/user_id", methods=["GET"])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def singleuser(current_user):
     # print(request.args["_id"])

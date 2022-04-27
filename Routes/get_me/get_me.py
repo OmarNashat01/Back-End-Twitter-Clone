@@ -46,7 +46,7 @@ def token_required(f):
 ############################################
 
 @get_me.route("/me", methods=["GET"])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def me(current_user):
 

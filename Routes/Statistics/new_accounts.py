@@ -34,7 +34,7 @@ def token_required(f):
     return decorated
     
 @new_accounts_count.route("/admin/statistics/new_account_count")
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def number_of_newaccounts(current_user):
     start_datetime = request.args.get('start_date')

@@ -8,7 +8,7 @@ Tweet_app = Blueprint("Tweet_app", __name__)
 
 
 @Tweet_app.route("/", methods=["POST", "DELETE"])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def create_tweet(current_user):
     if request.method == 'POST':
@@ -47,7 +47,7 @@ def create_tweet(current_user):
 
 
 @Tweet_app.route("/tweet_id", methods=["GET"])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def get_one_tweet(current_user):
     Id = str(request.args.get("Id", default=None, type=str))
@@ -84,7 +84,7 @@ def get_one_tweet(current_user):
 
 
 @Tweet_app.route("/random", methods=["GET"])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def get_all_tweets(current_user):
     # number of tweets to return
@@ -104,7 +104,7 @@ def get_all_tweets(current_user):
 
 
 @Tweet_app.route("/all/me", methods=["GET"])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def get_all_user_tweets_tweets(current_user):
     # number of tweets to return
@@ -126,7 +126,7 @@ def get_all_user_tweets_tweets(current_user):
 
 
 @Tweet_app.route("/all", methods=["GET"])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def get_all_user_tweets(current_user):
     # number of tweets to return

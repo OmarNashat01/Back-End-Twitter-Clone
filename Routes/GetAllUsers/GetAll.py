@@ -42,7 +42,7 @@ def token_required(f):
 
 
 @GetAll.route("/all", methods=['GET'])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def GET_ALL(current_user):
     if current_user['admin'] == True:

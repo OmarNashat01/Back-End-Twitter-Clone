@@ -36,6 +36,7 @@ def token_required(f):
 
     return decorated
 @retweets_count.route("/admin/statistics/retweet_count")
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def number_of_retweets(current_user):
     start_datetime = request.args.get('start_date')

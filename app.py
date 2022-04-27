@@ -23,6 +23,9 @@ from Routes.update_user.update_user import update_user
 app = Flask(__name__, template_folder='Templates')
 app.config.from_pyfile('config.cfg')
 mail.init_app(app)
+
+
+
 CORS(app)
 
 
@@ -40,6 +43,9 @@ app.register_blueprint(get_me, url_prefix='/users')
 app.register_blueprint(get_user, url_prefix='/users')
 app.register_blueprint(update_user, url_prefix='/users')
 
+@app.route("/", methods=["GET"])
+def home():
+    return "hello world"
 
 # Running the application
 if __name__ == '__main__':

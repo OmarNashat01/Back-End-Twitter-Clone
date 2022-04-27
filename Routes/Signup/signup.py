@@ -33,7 +33,7 @@ def generateOTP():
 
 
 @signup.route("/verify", methods=["POST"])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 def verify():   
     user_email = request.get_json()
     email = user_email["email"]
@@ -61,7 +61,8 @@ def verify():
 
        
 
-@signup.route("", methods=["POST"])
+@signup.route("/", methods=["POST"])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 def home():
     user_data = request.get_json() 
     email = user_data["email"]
@@ -110,6 +111,7 @@ def home():
 
 
 @signup.route('/confirm_email', methods=["GET"])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 def confirm_email():
     OTP = request.args.get('OTP')
     email = request.args.get('email')

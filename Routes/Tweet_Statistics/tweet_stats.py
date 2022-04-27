@@ -8,7 +8,7 @@ Tweet_stats = Blueprint("Tweet_stats", __name__)
 
 
 @Tweet_stats.route("/like_count", methods=["GET"])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def get_like_count_using_a_query(current_user):
     if current_user["admin"] == False:
@@ -56,7 +56,7 @@ def get_like_count_using_a_query(current_user):
 
 
 @Tweet_stats.route("/tweet_count", methods=["GET"])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def get_tweet_count_using_a_query(current_user):
     if current_user["admin"] == False:
