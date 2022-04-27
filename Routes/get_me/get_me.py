@@ -1,6 +1,6 @@
 from flask_restful import Resource, Api, reqparse
 from flask import Flask, request, Response, jsonify, Blueprint
-from flask_cors import cross_origin
+# from flask_cors import cross_origin
 from bson.objectid import ObjectId
 import jwt
 import json
@@ -46,7 +46,7 @@ def token_required(f):
 ############################################
 
 @get_me.route("/me", methods=["GET"])
-@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
+# @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def me(current_user):
 

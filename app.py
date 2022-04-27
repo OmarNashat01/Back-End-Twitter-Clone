@@ -26,7 +26,6 @@ mail.init_app(app)
 
 
 
-CORS(app)
 
 
 # Registering all the blue prints created in other files
@@ -43,9 +42,9 @@ app.register_blueprint(get_me, url_prefix='/users')
 app.register_blueprint(get_user, url_prefix='/users')
 app.register_blueprint(update_user, url_prefix='/users')
 
-@app.route("/", methods=["GET"])
-def home():
-    return "hello world"
+
+CORS(app)
+
 
 # Running the application
 if __name__ == '__main__':
