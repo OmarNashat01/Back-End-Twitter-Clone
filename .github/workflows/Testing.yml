@@ -12,10 +12,10 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
-#       - 
-#         name: test
-#         run: OUTPUT=$(docker-compose up --exit-code-from backend_test | tail -1) && echo $OUTPUT
-#         shell: bash
+      - 
+        name: test
+        run: OUTPUT=$(docker-compose up --exit-code-from backend_test | tail -1) && echo $OUTPUT
+        shell: bash
       -
         name: Set up QEMU
         if: steps.main.outputs.OUTPUT == 0
