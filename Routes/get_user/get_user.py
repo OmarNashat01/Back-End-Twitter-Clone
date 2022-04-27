@@ -71,14 +71,14 @@ def singleuser(current_user):
         return Response(
             response=json.dumps(
                 {"message": "The request was succesful",
-                 "user": f"{user}"
+                 "user": user
                  }),
             status=200,
             mimetype="application/json")
     except Exception as ex:
-        print("**********")
+        print("*********")
         print(ex)
-        print("**********")
+        print("*********")
         return Response(
             response=json.dumps(
                 {"message": "User ID not found"
