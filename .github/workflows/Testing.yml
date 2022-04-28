@@ -31,6 +31,7 @@ jobs:
       -
         name: Push old version to old image
         run: |
+          docker pull omarnashat01/backend_twitterclone:latest
           docker tag omarnashat01/backend_twitterclone:latest omarnashat01/backend_twitterclone:old
           docker push omarnashat01/backend_twitterclone:old
       
