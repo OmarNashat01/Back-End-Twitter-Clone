@@ -42,10 +42,15 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend_twitterclone:latest
-      -
-        name: Restart Kubernetes deployment
+      
+      
+  Kubectl:
+    runs-on: ubuntu-latest
+    steps:
+      -  
         uses: tale/kubectl-action@v1
         with:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
       - 
-        run: kubectl rollout restart deployment/twitterclone-team3-deployment
+        run: kubectl get pods
+    
