@@ -50,5 +50,5 @@ jobs:
           export KUBECONFIG=${HOME}/.kube/conf
       - 
         name: Restart deployment
-        run: kubectl  rollout restart deployment/twitterclone-team3-deployment
+        run: kubectl --kubeconfig ${HOME}/.kube/config rollout restart deployment/twitterclone-team3-deployment
     
