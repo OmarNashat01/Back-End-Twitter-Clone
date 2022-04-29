@@ -47,7 +47,7 @@ jobs:
         run: |
           mkdir ${HOME}/.kube
           cat ${{ secrets.KUBE_CONFIG }}|base64 --decode > ${HOME}/.kube/config
-          cat ${HOME}/.kube/config
+          export KUBECONFIG=${HOME}/.kube/conf
       - 
         name: Restart deployment
         run: kubectl  rollout restart deployment/twitterclone-team3-deployment
