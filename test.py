@@ -1,24 +1,31 @@
 import unittest
+from wsgiref import headers
 from app import app
 import json
 from Routes.Tweetstruct import col_of_tweets,col_of_users
 import pymongo 
 from bson import ObjectId
+from Database.Database import Database
 # sub class from testcase class
 
 
 token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI2MjY1NTIyNzRkNTc4NmY0MzdjYmIyNWMiLCJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjgyMzQzOTExfQ.b6-oq0j_Uto5NGvyobu4y2BVRjmM_6cUT9zQJ1I9FP8"
 header = {"x-access-token": token}
+user_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI2MjY1NTFmNDRkNTc4NmY0MzdjYmIyNWIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTY4MjM0MzQ5MX0.8xbJXtfITqlxM1YwdaRV1kr1qXRtvQJ3glhjxNdOPD4"
+header2 = {"x-access-token": user_token}
 
 tweet2 = col_of_tweets.find_one({"_id":{"$ne":ObjectId("6266b4bc234280718fc89ecf")}})
 tweettobedeleted = tweet2["_id"]
-#user1 = col_of_users.find_one({"_id":ObjectId("626551f44d5786f437cbb25b")},{"following.user_id":1,"_id":0})
-#print(user1)
-#user = col_of_users.find_one({"_id":{"$nin":list(user1["following"])}})
+user1 = col_of_users.find_one({"_id":ObjectId("626551f44d5786f437cbb25b")},{"following.user_id":1,"_id":0})
+print(user1)
+user = col_of_users.find_one({"_id":{"$nin":list(user1["following"])}})
 header1 = {"x-access-token": token}
 data = {"source_user_id": "626551f44d5786f437cbb25b",
         "target_user_id": "6265b8efc557bc4aa2f038ab"}
 codes = [200,400]
+OTP = 0
+
+
 
 class TestRetweetCounts(unittest.TestCase):
     
@@ -52,14 +59,14 @@ class TestRetweetCounts(unittest.TestCase):
         print("_________________________________________________")
         print("retweet count returned  content type is valid")
 
-    #check if returned users are right
-    # def test_data(self):
-    #     tester = app.test_client(self)
-    #     response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18")
-    #     data_returned = response.get_json()
-    #     print("******************************")
-    #     print(data_returned)
-    #     self.assertEqual(data_returned,{"Number of retweets": 2})
+    check if returned users are right
+    def test_data(self):
+        tester = app.test_client(self)
+        response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18")
+        data_returned = response.get_json()
+        print("******************************")
+        print(data_returned)
+        self.assertEqual(data_returned,{"Number of retweets": 2})
 class TestNewAccounts(unittest.TestCase):
     def test_success(self):
         tester = app.test_client(self)
@@ -527,92 +534,119 @@ class TestTweetsstats(unittest.TestCase):
         print(response.status_code)
         print(response)
         print("test_tweet_count_not_found")
-# class test_Login(unittest.TestCase):
+class test_Login(unittest.TestCase):
     
-#     def test_correct_email_password(self):
-#         print("_________________")
-#         tester = app.test_client(self)
-#         response = tester.post("/Login", data=json.dumps({
-#             "email": "mohamedmohsen96661@gmail.com",
-#             "password": "yahoome.com"
-#         }),
-#             content_type='application/json')
-#         statuscode = response.status_code
-#         self.assertEqual(statuscode, 200)
+    def test_correct_email_password(self):
+        print("_________________")
+        tester = app.test_client(self)
+        response = tester.post("/Login/", data=json.dumps({
+            "email": "mohamedmohsen96661@gmail.com",
+            "password": "yahoome.com"
+        }),
+            content_type='application/json')
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 201)
 
 
-#     def test_correct_email_wrong_password(self):
-#         print("_________________")
-#         tester = app.test_client(self)
-#         response = tester.post("/login", data=json.dumps({
-#             "email": " mohamedmohsen96661@gmail.com",
-#             "password": "yahoomae.com"
-#         }),
-#             content_type='application/json')
-#         statuscode = response.status_code
-#         self.assertEqual(statuscode, 400)
+    def test_correct_email_wrong_password(self):
+        print("_________________")
+        tester = app.test_client(self)
+        response = tester.post("/Login/", data=json.dumps({
+            "email": "mohamedmohsen96661@gmail.com",
+            "password": "yahoomae.com"
+        }),
+            content_type='application/json')
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 400)
     
-#     def test_wrong_email_wrong_password(self):
-#         print("_________________")
-#         tester = app.test_client(self)
-#         response = tester.post("/login", data=json.dumps({
-#             "email": "notemail@gmail.com",
-#             "password": "yahoaomae.com"
-#         }),
-#             content_type='application/json', headers=header)
-#         statuscode = response.status_code
-#         self.assertEqual(statuscode, 400)
+    def test_wrong_email_address(self):
+        print("_________________")
+        tester = app.test_client(self)
+        response = tester.post("/Login/", data=json.dumps({
+            "email": "notemail@gmail.com",
+            "password": "yahoaomae.com"
+        }),
+            content_type='application/json', headers=header)
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 404)
 
-#     def test_signup(self): #inserting a verfied user in the database  
+    def test_signup_OTP(self): #inserting a verfied user in the database 
+
+        tester = app.test_client(self)
+        response = tester.post("/signup/verify", data=json.dumps({
+            "email": "mohamedmadboly@gmail.com"
+        }),
+            content_type='application/json', headers=header)
+        data = json.loads(response.get_data(as_text=True))
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 200)
+
+
+    
+
+
+    def test_signup(self): #inserting a verfied user in the database  
         
-#         print("_________________")
-#         tester = app.test_client(self)
-#         response = tester.post("/signup", data=json.dumps({
-#             "email": "mohameaadmohsen@gmail.com",
-#             "password": "yahoaomae.com",
-#             "username": "momoaaa",
-#             "date_of_birth": "26/08/2001",
-#             "name": "mohamed",
-#             "website": "facebook",
-#             "location": "egpyt",
-#             "gender": "M",
+        print("_________________")
+        tester = app.test_client(self)
+        response = tester.post("/signup", data=json.dumps({
+            "email": "mohameaadmohsen@gmail.com",
+            "password": "yahoaomae.com",
+            "username": "never_inserted",
+            "date_of_birth": "26/08/2001",
+            "name": "mohamed",
+            "website": "facebook",
+            "location": "egpyt",
+            "gender": "M",
 
-#         }),
-#             content_type='application/json', headers=header)
-#         statuscode = response.status_code
-#         self.assertEqual(statuscode, 200)
-
+        }),
+            content_type='application/json', headers=header)
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 200)
+        data = json.loads(response.get_data(as_text=True))
+        response = Database.User.delete_one({"username": "never_inserted"})
     
-#     def test_signup_existing_username(self): #inserting a verfied user in the database  
+    def test_signup_existing_username(self): #inserting a verfied user in the database  
         
-#         print("_________________")
-#         tester = app.test_client(self)
-#         response = tester.post("/signup", data=json.dumps({
-#             "email": "mohameaadmohsen@gmail.com",
-#             "password": "yahoaomae.com",
-#             "username": "MakOelGen",
-#             "password": "test11111",
-#             "date_of_birth": "26/08/2001",
-#             "name": "mohamed",
-#             "website": "facebook",
-#             "bio": "hello",
-#             "location": "egpyt",
-#             "gender": "M",
+        print("_________________")
+        tester = app.test_client(self)
+        response = tester.post("/signup", data=json.dumps({
+            "email": "mohameaadmohsen@gmail.com",
+            "password": "yahoaomae.com",
+            "username": "MakOelGen",
+            "password": "test11111",
+            "date_of_birth": "26/08/2001",
+            "name": "mohamed",
+            "website": "facebook",
+            "bio": "hello",
+            "location": "egpyt",
+            "gender": "M",
 
-#         }),
-#             content_type='application/json', headers=header)
-#         statuscode = response.status_code
-#         self.assertEqual(statuscode, 400)
+        }),
+            content_type='application/json', headers=header)
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 400)
 
 
-#     def test_get_all(self): #admin using the command GETALL
-#         print("_________________")
-#         tester = app.test_client(self)
-#         response = tester.get("f'/users/all?offset={0}&limit={10}'", headers=header)
-#         statuscode = response.status_code
-#         self.assertEqual(statuscode, 200)
-#         print(response.status_code)
-#         print(response)
+
+
+    def test_get_all_admin(self): #admin using the command GETALL
+        print("_________________")
+        tester = app.test_client(self)
+        response = tester.get(f"/users/all?offset={0}&limit={10}", headers=header)
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 200)
+        print(response.status_code)
+        print(response)
+
+    def test_get_all_non_admin(self): #admin using the command GETALL
+        print("_________________")
+        tester = app.test_client(self)
+        response = tester.get(f"/users/all?offset={0}&limit={10}", headers=header2)
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 403)
+        print(response.status_code)
+        print(response)    
 
 if __name__ == "__main__":
     unittest.main()
