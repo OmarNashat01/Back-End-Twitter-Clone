@@ -646,7 +646,7 @@ class test_Login(unittest.TestCase):
         statuscode = response.status_code
         self.assertEqual(statuscode, 403)
         print(response.status_code)
-        print(response)    
+        print(response) 
 
 if __name__ == "__main__":
     unittest.main()
