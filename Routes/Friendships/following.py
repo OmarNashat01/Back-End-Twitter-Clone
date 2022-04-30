@@ -34,7 +34,7 @@ def token_required(f):
 
 
 @following.route("/following",methods=['GET','POST','DELETE'])
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def follow_user(current_user):
     if request.method == 'POST':
