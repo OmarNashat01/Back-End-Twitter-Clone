@@ -46,38 +46,37 @@ def token_required(f):
 @token_required
 def GET_ALL(current_user):
     if current_user['admin'] == True:
-        if request.args.get('keyword') == None:
-            limit = int(request.args.get('limit'))
-            offset = int(request.args.get('offset'))
-            starting_id = Database.User.find().sort('_id')
-            last_id = starting_id[int(offset)]['_id']
-            isfound = Database.User.find({'_id': {'$gte': last_id}}).sort('_id').limit(limit)
-            output = []
+        limit = int(request.args.get('limit'))
+        offset = int(request.args.get('offset'))
+        starting_id = Database.User.find().sort('_id')
+        last_id = starting_id[int(offset)]['_id']
+        isfound = Database.User.find({'_id': {'$gte': last_id}}).sort('_id').limit(limit)
+        output = []
 
-            for i in isfound:
-                i["_id"] = str(i["_id"])
-                i["creation_date"] = i["creation_date"].date()
-                i["creation_date"] = i["creation_date"].strftime("%Y-%m-%d")
-                del i['password']
-                output.append(i)
-
-
-            #next_page = '/users/all?limit=' + str(limit) + '&offset=' + str(offset + limit)
+        for i in isfound:
+            i["_id"] = str(i["_id"])
+            i["creation_date"] = i["creation_date"].date()
+            i["creation_date"] = i["creation_date"].strftime("%Y-%m-%d")
+            del i['password']
+            output.append(i)
 
 
-           # if offset == 1:
-                #prev_page = '/users/all?limit=' + str(limit) + '&offset=' + str(0)
-            #elif offset == 0:
-                #prev_page = 'No previous page'
+        #next_page = '/users/all?limit=' + str(limit) + '&offset=' + str(offset + limit)
+
+
+        # if offset == 1:
+            #prev_page = '/users/all?limit=' + str(limit) + '&offset=' + str(0)
+        #elif offset == 0:
+            #prev_page = 'No previous page'
+        #else:
+
+            # if limit > offset:
+            #    prev_page = offset - 1
             #else:
+                #  prev_page = '/users/all?limit=' + str(limit) + '&offset=' + str(offset - limit)
 
-               # if limit > offset:
-                #    prev_page = offset - 1
-                #else:
-                  #  prev_page = '/users/all?limit=' + str(limit) + '&offset=' + str(offset - limit)
-
-            
-            return jsonify({"users": output}), 200
+        
+        return jsonify({"users": output}), 200
            
     else: 
         return jsonify({"Message": "user is not admin"}), 403
