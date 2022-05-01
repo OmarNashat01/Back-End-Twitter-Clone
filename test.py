@@ -59,14 +59,14 @@ class TestRetweetCounts(unittest.TestCase):
         print("_________________________________________________")
         print("retweet count returned  content type is valid")
 
-    check if returned users are right
-    def test_data(self):
-        tester = app.test_client(self)
-        response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18")
-        data_returned = response.get_json()
-        print("******************************")
-        print(data_returned)
-        self.assertEqual(data_returned,{"Number of retweets": 2})
+    #check if returned users are right
+    # def test_data(self):
+    #     tester = app.test_client(self)
+    #     response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18")
+    #     data_returned = response.get_json()
+    #     print("******************************")
+    #     print(data_returned)
+    #     self.assertEqual(data_returned,{"Number of retweets": 2})
 class TestNewAccounts(unittest.TestCase):
     def test_success(self):
         tester = app.test_client(self)
