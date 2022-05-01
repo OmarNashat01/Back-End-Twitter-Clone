@@ -1,3 +1,4 @@
+from urllib import response
 from flask import Blueprint, request, Response, jsonify, render_template
 from pymongo import MongoClient
 from flask_cors import cross_origin
@@ -46,8 +47,15 @@ def token_required(f):
 @token_required
 def GET_ALL(current_user):
     if current_user['admin'] == True:
+        count = Database.User.count_documents({})
         limit = int(request.args.get('limit'))
         offset = int(request.args.get('offset'))
+        empty_array = []
+        empty_document = {}
+        empty_array.append(empty_document)
+        if (offset > count - 1):
+            return jsonify({"users": empty_array}), 204
+
         starting_id = Database.User.find().sort('_id')
         last_id = starting_id[int(offset)]['_id']
         isfound = Database.User.find({'_id': {'$gte': last_id}}).sort('_id').limit(limit)
