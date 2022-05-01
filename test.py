@@ -59,10 +59,10 @@ class TestRetweetCounts(unittest.TestCase):
         print("_________________________________________________")
         print("retweet count returned  content type is valid")
 
-    #check if returned users are right
+    # #check if returned users are right
     # def test_data(self):
     #     tester = app.test_client(self)
-    #     response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18")
+    #     response= tester.get("/admin/statistics/retweet_count?start_date=2022-04-15&end_date=2022-04-18", headers=header)
     #     data_returned = response.get_json()
     #     print("******************************")
     #     print(data_returned)
@@ -539,7 +539,7 @@ class test_Login(unittest.TestCase):
     def test_correct_email_password(self):
         print("_________________")
         tester = app.test_client(self)
-        response = tester.post("/Login/", data=json.dumps({
+        response = tester.post("/Login", data=json.dumps({
             "email": "mohamedmohsen96661@gmail.com",
             "password": "yahoome.com"
         }),
@@ -551,7 +551,7 @@ class test_Login(unittest.TestCase):
     def test_correct_email_wrong_password(self):
         print("_________________")
         tester = app.test_client(self)
-        response = tester.post("/Login/", data=json.dumps({
+        response = tester.post("/Login", data=json.dumps({
             "email": "mohamedmohsen96661@gmail.com",
             "password": "yahoomae.com"
         }),
@@ -562,7 +562,7 @@ class test_Login(unittest.TestCase):
     def test_wrong_email_address(self):
         print("_________________")
         tester = app.test_client(self)
-        response = tester.post("/Login/", data=json.dumps({
+        response = tester.post("/Login", data=json.dumps({
             "email": "notemail@gmail.com",
             "password": "yahoaomae.com"
         }),

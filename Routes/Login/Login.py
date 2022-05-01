@@ -14,7 +14,7 @@ Login = Blueprint("Login" ,__name__)
 
 
 
-@Login.route("/", methods=['POST'])
+@Login.route("", methods=['POST'])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 def Home():
    
