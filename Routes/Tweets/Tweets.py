@@ -7,7 +7,7 @@ from bson import ObjectId
 Tweet_app = Blueprint("Tweet_app", __name__)
 
 
-@Tweet_app.route("/", methods=["POST"])
+@Tweet_app.route("", methods=["POST"])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def create_tweet(current_user):
@@ -27,7 +27,7 @@ def create_tweet(current_user):
         return {"404": "operation failed"}, 404
 
     
-@Tweet_app.route("/", methods=["DELETE"])
+@Tweet_app.route("", methods=["DELETE"])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
     # ID of tweet to delete
