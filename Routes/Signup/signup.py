@@ -1,17 +1,34 @@
+import json
 import bcrypt
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, session, abort, jsonify, render_template, redirect
 from flask_cors import cross_origin
 import datetime
 from flask_mail import Mail, Message
 import jwt
+import requests
+import os
 import math, random
 from Database.Database import Database
+from pip._vendor import cachecontrol
+from google_auth_oauthlib.flow import Flow
+from google.oauth2 import id_token
+import google.auth.transport.requests
+import pathlib
+from pytest import Session
+
 #from app import mail
 #from app import app
 
 
 signup = Blueprint("signup" ,__name__)
 mail = Mail()
+GOOGLE_CLIENT_ID = "502944148272-a1p36kfp4muj13vtrklhl3ik427a3tn7.apps.googleusercontent.com"
+client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
+flow = Flow.from_client_secrets_file(client_secrets_file = client_secrets_file, 
+scopes = ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
+redirect_uri = "http://127.0.0.1:5000/signup/callback") #once you deploy this code change the IP!
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 
 # function to generate OTP
@@ -29,6 +46,128 @@ def generateOTP():
  
     return OTP
 
+def randomnumber():
+ 
+    # Declare a digits variable 
+    # which stores all digits
+    digits = "0123456789"
+    OTP = ""
+ 
+   # length of password can be changed
+   # by changing value in range
+    for i in range(8) :
+        OTP += digits[math.floor(random.random() * 10)]
+ 
+    return OTP
+
+
+@signup.route("/google", methods=['GET', 'POST'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
+def Google_Login():
+    if request.method == 'GET':
+        authorization_url, state = flow.authorization_url()
+        session["state"] = state
+        return redirect(authorization_url)
+    else:
+        user_data = request.get_json() 
+        email = user_data["email"]
+        username = user_data["username"]
+        gender = user_data["gender"]
+        name = user_data["name"]
+        location = user_data["location"]
+        website = user_data["website"]
+        prof_pic_url = user_data["prof_pic_url"]
+        date_of_birth = user_data["date_of_birth"]
+        isfound = Database.User.find_one({"username": username})
+        creation_date = datetime.datetime.now()
+        if isfound == None:
+            following = []
+            followers = []
+            Database.User.insert_one({
+                "email": email,
+                "name": name,
+                "username": username,
+                "date_of_birth": date_of_birth,
+                "gender": gender,
+                "creation_date": creation_date,
+                "admin": False,
+                "bio": None,
+                "webiste": website,
+                "location": location,
+                "prof_pic_url": prof_pic_url,
+                "cover_pic_url": "https://i.pinimg.com/564x/a2/64/b4/a264b464b6fd6138d972448e19ba764d.jpg",
+                "following_count": 0,
+                "followers_count": 0,
+                "following": following,
+                "followers": followers,
+                "tweet_count": 0 
+                })
+
+            db_response = Database.User.find_one({"username": username})
+            user_id = db_response["_id"]
+            user_id = str(user_id)
+
+            token = jwt.encode({'_id': user_id, 'admin': False, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= 525600)}, "SecretKey1911")
+            return jsonify({"message": "google user created",
+            "token": token,
+            "admin": False,
+            "user_id": user_id}),400
+    
+        else:
+            return jsonify({"messsage": "username exists"}),400
+
+
+
+@signup.route("/callback", methods=['GET'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
+def callback():
+    flow.fetch_token(authorization_response=request.url)
+    if not session["state"] == request.args["state"]:
+        abort(500)  # State does not match!
+
+    credentials = flow.credentials
+    request_session = requests.session()
+    cached_session = cachecontrol.CacheControl(request_session)
+    token_request = google.auth.transport.requests.Request(session=cached_session)
+    
+
+    id_info = id_token.verify_oauth2_token(
+        id_token=credentials._id_token,
+        request=token_request,
+        audience=GOOGLE_CLIENT_ID
+    )
+    isfound = Database.User.find_one({"email": id_info['email']})
+
+    
+    if isfound == None:
+        isfound = Database.User.find_one({"username": id_info["given_name"]})
+        if isfound == None:
+            username = id_info["given_name"]
+        else:
+            while (1):
+              OTP = generateOTP()
+              username = id_info["given_name"] + OTP
+              if Database.User.find_one({"username": username}) == None:
+                  break
+
+        return jsonify({"message": "user verified",
+        "prof_pic_url": id_info["picture"],
+        "name": id_info["given_name"],
+        "recommended_user_name": username})
+
+
+   
+    
+    else:
+        db_response = Database.User.find_one({"email": id_info["email"]})
+        user_id = db_response["_id"]
+        user_id = str(user_id)
+        token = jwt.encode({'_id': user_id, 'admin': False, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= 525600)}, "SecretKey1911")
+        return jsonify({"message": "user exists",
+        "token": token,
+        "admin": False,
+        "user_id": user_id}),400
+       
 
 
 
@@ -57,8 +196,7 @@ def verify():
         "OTP": OTP}), 200
 
 
-
-
+    
        
 
 @signup.route("", methods=["POST"])

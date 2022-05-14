@@ -1,10 +1,18 @@
 
+import json
+
+import os
 import bcrypt
-from flask import Blueprint, request, jsonify
+import requests
+from flask import Blueprint, request, jsonify, session, abort, redirect, request
 from flask_cors import cross_origin
 import jwt
 import datetime
 from Database.Database import Database
+import math, random
+
+
+
 
 
 
@@ -17,7 +25,6 @@ Login = Blueprint("Login" ,__name__)
 @Login.route("", methods=['POST'])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 def Home():
-   
     Login_data = request.get_json()
     email = Login_data["email"]
     password = Login_data["password"]
@@ -41,8 +48,25 @@ def Home():
     else:
             return jsonify({"message": "email doesn't exist"}),404
 
-            
+
+
+
     
+
+
+
+
+
+
+
+       
+
+    
+
+
+    
+
+
 
   
     

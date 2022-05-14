@@ -19,6 +19,7 @@ from Routes.update_user.update_user import update_user
 
 
 
+
 # Creating flask application
 app = Flask(__name__, template_folder='Templates')
 app.config.from_pyfile('config.cfg')
@@ -43,6 +44,8 @@ app.register_blueprint(Tweet_stats, url_prefix='/admin/statistics')
 app.register_blueprint(get_me, url_prefix='/users')
 app.register_blueprint(get_user, url_prefix='/users')
 app.register_blueprint(update_user, url_prefix='/users')
+
+app.secret_key = "CodeSpecialist.com"
 
 
 CORS(app)
