@@ -8,7 +8,7 @@ from flask import Blueprint, request, jsonify, session, abort, redirect, request
 from flask_cors import cross_origin
 import jwt
 import datetime
-
+from Database.Database import Database
 import math, random
 
 

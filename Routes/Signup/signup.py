@@ -1,3 +1,4 @@
+import json
 import bcrypt
 from flask import Blueprint, request, session, abort, jsonify, render_template, redirect
 from flask_cors import cross_origin
@@ -60,13 +61,61 @@ def randomnumber():
     return OTP
 
 
-@signup.route("/google", methods=['GET'])
+@signup.route("/google", methods=['GET', 'POST'])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 def Google_Login():
-    authorization_url, state = flow.authorization_url()
-    session["state"] = state
-    print(authorization_url)
-    return redirect(authorization_url)
+    if request.method == 'GET':
+        authorization_url, state = flow.authorization_url()
+        session["state"] = state
+        return redirect(authorization_url)
+    else:
+        user_data = request.get_json() 
+        email = user_data["email"]
+        username = user_data["username"]
+        gender = user_data["gender"]
+        name = user_data["name"]
+        location = user_data["location"]
+        website = user_data["website"]
+        prof_pic_url = user_data["prof_pic_url"]
+        date_of_birth = user_data["date_of_birth"]
+        isfound = Database.User.find_one({"username": username})
+        creation_date = datetime.datetime.now()
+        if isfound == None:
+            following = []
+            followers = []
+            Database.User.insert_one({
+                "email": email,
+                "name": name,
+                "username": username,
+                "date_of_birth": date_of_birth,
+                "gender": gender,
+                "creation_date": creation_date,
+                "admin": False,
+                "bio": None,
+                "webiste": website,
+                "location": location,
+                "prof_pic_url": prof_pic_url,
+                "cover_pic_url": "https://i.pinimg.com/564x/a2/64/b4/a264b464b6fd6138d972448e19ba764d.jpg",
+                "following_count": 0,
+                "followers_count": 0,
+                "following": following,
+                "followers": followers,
+                "tweet_count": 0 
+                })
+
+            db_response = Database.User.find_one({"username": username})
+            user_id = db_response["_id"]
+            user_id = str(user_id)
+
+            token = jwt.encode({'_id': user_id, 'admin': False, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= 525600)}, "SecretKey1911")
+            return jsonify({"message": "google user created",
+            "token": token,
+            "admin": False,
+            "user_id": user_id}),400
+    
+        else:
+            return jsonify({"messsage": "username exists"}),400
+
 
 
 @signup.route("/callback", methods=['GET'])
@@ -89,14 +138,8 @@ def callback():
     )
     isfound = Database.User.find_one({"email": id_info['email']})
 
-    if isfound:
-        token = jwt.encode({'_id': str(isfound["_id"]), 'admin': isfound['admin'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= 525600)}, "SecretKey1911")
-        return jsonify({"message": "user already exists",
-        "token": token,
-        "admin": isfound['admin'],
-        "prof_pic_url": id_info["picture"],}),400
     
-    else:
+    if isfound == None:
         isfound = Database.User.find_one({"username": id_info["given_name"]})
         if isfound == None:
             username = id_info["given_name"]
@@ -112,6 +155,19 @@ def callback():
         "name": id_info["given_name"],
         "recommended_user_name": username})
 
+
+   
+    
+    else:
+        db_response = Database.User.find_one({"email": id_info["email"]})
+        user_id = db_response["_id"]
+        user_id = str(user_id)
+        token = jwt.encode({'_id': user_id, 'admin': False, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= 525600)}, "SecretKey1911")
+        return jsonify({"message": "user exists",
+        "token": token,
+        "admin": False,
+        "user_id": user_id}),400
+       
 
 
 
@@ -140,47 +196,7 @@ def verify():
         "OTP": OTP}), 200
 
 
-@signup.route("/google", methods=["POST"])
-@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
-def signup_google():
-    user_data = request.get_json() 
-    email = user_data["email"]
-    username = user_data["username"]
-    gender = user_data["gender"]
-    name = user_data["name"]
-    location = user_data["location"]
-    website = user_data["website"]
-    prof_pic_url = user_data["prof_pic_url"]
-    date_of_birth = user_data["date_of_birth"]
-    isfound = Database.User.find_one({"username": username})
-    creation_date = datetime.datetime.now()
-    if isfound == None:
-        following = []
-        followers = []
-        Database.User.insert_one({
-            "email": email,
-            "name": name,
-            "username": username,
-            "date_of_birth": date_of_birth,
-            "gender": gender,
-            "creation_date": creation_date,
-            "admin": False,
-            "bio": None,
-            "webiste": website,
-            "location": location,
-            "prof_pic_url": prof_pic_url,
-            "cover_pic_url": "https://i.pinimg.com/564x/a2/64/b4/a264b464b6fd6138d972448e19ba764d.jpg",
-            "following_count": 0,
-            "followers_count": 0,
-            "following": following,
-            "followers": followers,
-            "tweet_count": 0 
-            })
     
-        return jsonify({"message": "Successufly inserted new user"}),200
-    else:
-        return jsonify({"messsage": "username exists"}),400
-
        
 
 @signup.route("", methods=["POST"])
