@@ -6,6 +6,7 @@ import jwt
 from bson import ObjectId
 from functools import wraps
 from Database.Database import Database
+import re
 
 
 
@@ -61,11 +62,14 @@ def GET_ALL(current_user):
         isfound = Database.User.find({'_id': {'$gte': last_id}}).sort('_id').limit(limit)
         output = []
 
+    
+
         for i in isfound:
             i["_id"] = str(i["_id"])
             i["creation_date"] = i["creation_date"].date()
             i["creation_date"] = i["creation_date"].strftime("%Y-%m-%d")
-            del i['password']
+            if "password" in i:
+                del i['password']
             output.append(i)
 
 
@@ -83,6 +87,8 @@ def GET_ALL(current_user):
             #else:
                 #  prev_page = '/users/all?limit=' + str(limit) + '&offset=' + str(offset - limit)
 
+        print(output)
+
         
         return jsonify({"users": output}), 200
            
@@ -91,3 +97,46 @@ def GET_ALL(current_user):
 
    
 
+
+
+@GetAll.route("/search", methods=['GET'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
+@token_required
+def search_user(current_user):
+    paginated_list = []
+    empty_array = []
+    users = []
+    limit = int(request.args.get('limit'))
+    offset = int(request.args.get('offset'))
+    keyword = request.args.get('keyword')
+    if current_user['admin'] == True:
+        db_response = Database.User.find({
+        'username': {
+            '$regex': re.compile(rf"{keyword}(?i)")
+        }
+    })
+
+        for i in db_response:
+            i["_id"] = str(i["_id"])
+            i["creation_date"] = i["creation_date"].date()
+            i["creation_date"] = i["creation_date"].strftime("%Y-%m-%d")
+            del i['password']
+            users.append(i)
+
+        count = len(users)
+
+        if (offset > count - 1):
+            return jsonify({"users": empty_array}), 204
+
+        
+
+        for i in range(len(users)):
+            paginated_list.append(users[i+offset])
+            if i+1== limit:
+                break
+ 
+        return jsonify({"users": paginated_list}), 200
+
+    
+    else:
+        return jsonify({"message":"user is not admin"})
