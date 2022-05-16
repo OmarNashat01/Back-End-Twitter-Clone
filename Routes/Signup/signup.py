@@ -26,7 +26,7 @@ GOOGLE_CLIENT_ID = "502944148272-a1p36kfp4muj13vtrklhl3ik427a3tn7.apps.googleuse
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 flow = Flow.from_client_secrets_file(client_secrets_file = client_secrets_file, 
 scopes = ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-redirect_uri = "http://45.79.245.94.xip.io:5000/signup/callback") #once you deploy this code change the IP!
+redirect_uri = "http://45-79-245-94.ip.linodeusercontent.com:5000/signup/callback") #once you deploy this code change the IP!
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
@@ -60,6 +60,32 @@ def randomnumber():
  
     return OTP
 
+
+
+
+@signup.route("/verify/phone", methods=["POST"])
+def Verify_phone():
+    user_phone_json = request.get_json()
+    phone_number = user_phone_json['phone']
+    isfound = Database.User.find_one({'phone': phone_number})
+    if isfound:
+        return jsonify({"message": "phone does already exist"}), 400
+
+    #elif isExists == False:
+        #return jsonify({"404": "Email doesn't exist"}), 404 
+        #GENERATING TOO MANY ERRORS, WILL BE CONSIDERED LATER
+
+    else:
+        OTP = generateOTP()
+
+    resp = requests.post('https://textbelt.com/text', {
+    'phone': '+201019937668',
+    'message': 'Hello world',
+    'key': 'textbelt',
+    })
+    print(resp.json())
+
+    return jsonify({"message": "sent OTP "}),200
 
 @signup.route("/google", methods=['GET', 'POST'])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
