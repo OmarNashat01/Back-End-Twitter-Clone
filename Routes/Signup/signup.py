@@ -61,6 +61,32 @@ def randomnumber():
     return OTP
 
 
+
+
+@signup.route("/verify/phone", methods=["POST"])
+def Verify_phone():
+    user_phone_json = request.get_json()
+    phone_number = user_phone_json['phone']
+    isfound = Database.User.find_one({'phone': phone_number})
+    if isfound:
+        return jsonify({"message": "phone does already exist"}), 400
+
+    #elif isExists == False:
+        #return jsonify({"404": "Email doesn't exist"}), 404 
+        #GENERATING TOO MANY ERRORS, WILL BE CONSIDERED LATER
+
+    else:
+        OTP = generateOTP()
+
+    resp = requests.post('https://textbelt.com/text', {
+    'phone': '+201019937668',
+    'message': 'Hello world',
+    'key': 'textbelt',
+    })
+    print(resp.json())
+
+    return jsonify({"message": "sent OTP "}),200
+
 @signup.route("/google", methods=['GET', 'POST'])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 def Google_Login():
