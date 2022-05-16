@@ -26,7 +26,7 @@ GOOGLE_CLIENT_ID = "502944148272-a1p36kfp4muj13vtrklhl3ik427a3tn7.apps.googleuse
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 flow = Flow.from_client_secrets_file(client_secrets_file = client_secrets_file, 
 scopes = ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-redirect_uri = "http://45.79.245.94.xip.io:5000/signup/callback") #once you deploy this code change the IP!
+redirect_uri = "http://45-79-245-94.ip.linodeusercontent.com:5000/signup/callback") #once you deploy this code change the IP!
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
