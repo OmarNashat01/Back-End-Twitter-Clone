@@ -63,7 +63,10 @@ def singleuser(current_user):
         user_to_get = {"_id": request.args["_id"]}
         user_id = request.args["_id"]
         db_response = mydb.User.find_one(user_to_get)
-        del user['password']
+        if 'password' in user:
+            del user['password']
+        if 'notifications' in user:
+            del user['password']
         user["creation_date"] = user["creation_date"].date()
         user["creation_date"] = user["creation_date"].strftime("%Y-%m-%d")
         user["_id"] = str(user["_id"])
