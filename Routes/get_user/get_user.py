@@ -66,7 +66,7 @@ def singleuser(current_user):
         if 'password' in user:
             del user['password']
         if 'notifications' in user:
-            del user['password']
+            del user['db_response']
         user["creation_date"] = user["creation_date"].date()
         user["creation_date"] = user["creation_date"].strftime("%Y-%m-%d")
         user["_id"] = str(user["_id"])

@@ -16,6 +16,8 @@ from Routes.Signup.signup import signup, mail
 from Routes.get_me.get_me import get_me
 from Routes.get_user.get_user import get_user
 from Routes.update_user.update_user import update_user
+from Routes.block_user.post_block import block
+from Routes.block_user.get_blocked import getblock
 
 
 
@@ -44,7 +46,8 @@ app.register_blueprint(Tweet_stats, url_prefix='/admin/statistics')
 app.register_blueprint(get_me, url_prefix='/users')
 app.register_blueprint(get_user, url_prefix='/users')
 app.register_blueprint(update_user, url_prefix='/users')
-
+app.register_blueprint(block, url_prefix='/admin')
+app.register_blueprint(getblock, url_prefix ='/admin')
 app.secret_key = "CodeSpecialist.com"
 
 
