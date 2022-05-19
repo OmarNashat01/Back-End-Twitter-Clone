@@ -40,6 +40,30 @@ def token_required(f):
        
     return decorated
 
+def check_block(token):
+    
+    try:
+        data = jwt.decode(token, "SecretKey1911", "HS256")
+        user_id = ObjectId(data['_id'])
+        current_user = Database.User.find_one({'_id': user_id})
+
+    except:
+        return jsonify({'message': 'Token is invalid!'}), 401
+
+    user_id = str(current_user['_id'])
+    db_response = Database.blocked_users.find_one({'_id': user_id})
+
+    if db_response == None:
+        return jsonify("not_banned")
+    else:
+        try:
+            jwt.decode(db_response['token'], "SecretKey1911", "HS256")
+        except:
+            Database.blocked_users.delete_one({'_id': user_id})
+            return 'not_banned'
+
+    return 'banned'
+
 
         
 
@@ -49,6 +73,7 @@ def token_required(f):
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def GET_ALL(current_user):
+    
     if current_user['admin'] == True:
         count = Database.User.count_documents({})
         limit = int(request.args.get('limit'))
@@ -96,7 +121,7 @@ def GET_ALL(current_user):
 
         
         return jsonify({"users": output}), 200
-           
+        
     else: 
         return jsonify({"Message": "user is not admin"}), 403
 
