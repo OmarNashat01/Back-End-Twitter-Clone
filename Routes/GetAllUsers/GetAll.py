@@ -1,4 +1,6 @@
 from urllib import response
+
+from pyparsing import empty
 from flask import Blueprint, request, Response, jsonify, render_template
 from pymongo import MongoClient
 from flask_cors import cross_origin
@@ -68,8 +70,11 @@ def GET_ALL(current_user):
             i["_id"] = str(i["_id"])
             i["creation_date"] = i["creation_date"].date()
             i["creation_date"] = i["creation_date"].strftime("%Y-%m-%d")
-            if "password" in i:
+            if 'password' in i:
                 del i['password']
+            if 'notifications' in i:
+                del i['notifications']
+            
             output.append(i)
 
 
@@ -109,34 +114,42 @@ def search_user(current_user):
     limit = int(request.args.get('limit'))
     offset = int(request.args.get('offset'))
     keyword = request.args.get('keyword')
-    if current_user['admin'] == True:
-        db_response = Database.User.find({
-        'username': {
-            '$regex': re.compile(rf"{keyword}(?i)")
-        }
+    db_response = Database.User.find({
+    'username': {
+        '$regex': re.compile(rf"{keyword}(?i)")
+    }
     })
 
-        for i in db_response:
-            i["_id"] = str(i["_id"])
-            i["creation_date"] = i["creation_date"].date()
-            i["creation_date"] = i["creation_date"].strftime("%Y-%m-%d")
+
+
+    for i in db_response:
+        i["_id"] = str(i["_id"])
+        i["creation_date"] = i["creation_date"].date()
+        i["creation_date"] = i["creation_date"].strftime("%Y-%m-%d")
+        if 'password' in i:
             del i['password']
-            users.append(i)
+        if 'notifications' in i:
+            del i['notifications']
+        users.append(i)
 
-        count = len(users)
+    count = len(users)
 
-        if (offset > count - 1):
-            return jsonify({"users": empty_array}), 204
-
-        
-
-        for i in range(len(users)):
-            paginated_list.append(users[i+offset])
-            if i+1== limit:
-                break
- 
-        return jsonify({"users": paginated_list}), 200
+    if (offset > count - 1):
+        print("mako")
+        return jsonify({"users": empty_array}), 204
 
     
-    else:
-        return jsonify({"message":"user is not admin"})
+
+    for i in range(len(users)):
+        paginated_list.append(users[i+offset])
+        if i+1== limit:
+            break
+
+    print(paginated_list)
+
+    return jsonify({"users": paginated_list}), 200
+
+
+
+    
+   

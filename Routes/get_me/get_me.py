@@ -55,6 +55,8 @@ def me(current_user):
         user = mydb.User.find_one(user_id)
         if 'password' in current_user:
             del user['password']
+        if 'notifications' in current_user:
+            del i['notifications']
         user["creation_date"] = user["creation_date"].date()
         user["creation_date"] = user["creation_date"].strftime("%Y-%m-%d")
         user["_id"] = str(user["_id"])
