@@ -183,18 +183,18 @@ class TestFollowingList(unittest.TestCase):
     #     print(data_returned)
 class TestFollowersList(unittest.TestCase):
 
-    #check for response 200, List of users returned successfully
-    def test_success(self):
-        tester = app.test_client(self)
-        print("_________________________________________________")
-        response = tester.get(
-            "/users/followers?user_id=626552274d5786f437cbb25c", headers=header)
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
-        print(response.status_code)
-        print(response)
-        print("followers retrieval of user followers success")
-        print("_________________________________________________")
+    # #check for response 200, List of users returned successfully
+    # def test_success(self):
+    #     tester = app.test_client(self)
+    #     print("_________________________________________________")
+    #     response = tester.get(
+    #         "/users/followers?user_id=626552274d5786f437cbb25c", headers=header)
+    #     statuscode = response.status_code
+    #     self.assertEqual(statuscode, 200)
+    #     print(response.status_code)
+    #     print(response)
+    #     print("followers retrieval of user followers success")
+    #     print("_________________________________________________")
 
     def test_not_found(self):
         tester = app.test_client(self)
@@ -391,19 +391,19 @@ class TestTweets(unittest.TestCase):
 
 class TestUsers(unittest.TestCase):
 
-    # check for response 200, user returned successfully
-    def test_get_user_success(self):
-        print("_________________________________________________")
-        tester = app.test_client(self)
-        response = tester.get(
-            "/users/user_id?_id=626551f44d5786f437cbb25b", headers=header)
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
-        print("user is returned")
-        print("_________________________________________________")
-        print(response.status_code)
-        print(response)
-        print("test_get_user_success")
+    # # check for response 200, user returned successfully
+    # def test_get_user_success(self):
+    #     print("_________________________________________________")
+    #     tester = app.test_client(self)
+    #     response = tester.get(
+    #         "/users/user_id?_id=626551f44d5786f437cbb25b", headers=header)
+    #     statuscode = response.status_code
+    #     self.assertEqual(statuscode, 200)
+    #     print("user is returned")
+    #     print("_________________________________________________")
+    #     print(response.status_code)
+    #     print(response)
+    #     print("test_get_user_success")
 
     # check for response 404, User ID not found
     def test_get_user_not_found(self):
