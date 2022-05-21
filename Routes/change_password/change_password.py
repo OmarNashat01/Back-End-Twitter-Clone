@@ -1,6 +1,6 @@
-from flask_restful import Resource, Api, reqparse, Blueprint
+from flask_restful import Resource, Api, reqparse
 import bcrypt
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, Blueprint
 from bson import json_util
 from bson.objectid import ObjectId
 import pymongo
