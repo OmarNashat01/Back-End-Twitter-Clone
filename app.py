@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 
 
-#Importing all Routes
+# Importing all Routes
 
 from Routes.Friendships.followers import followers
 from Routes.Friendships.following import following
@@ -18,17 +18,16 @@ from Routes.get_user.get_user import get_user
 from Routes.update_user.update_user import update_user
 from Routes.block_user.post_block import block
 from Routes.block_user.get_blocked import getblock
-
-
+from Routes.get_blocked_user.get_blocked_users import get_blocked_users
+from Routes.unblock_user.unblock_user import unblock_user
+from Routes.change_password.change_password import change_password
+from Routes.forgot_password.forgot_password import forgot_password
 
 
 # Creating flask application
 app = Flask(__name__, template_folder='Templates')
 app.config.from_pyfile('config.cfg')
 mail.init_app(app)
-
-
-
 
 
 # Registering all the blue prints created in other files
@@ -47,7 +46,14 @@ app.register_blueprint(get_me, url_prefix='/users')
 app.register_blueprint(get_user, url_prefix='/users')
 app.register_blueprint(update_user, url_prefix='/users')
 app.register_blueprint(block, url_prefix='/admin')
-app.register_blueprint(getblock, url_prefix ='/admin')
+app.register_blueprint(getblock, url_prefix='/admin')
+
+app.register_blueprint(get_blocked_users, url_prefix='/users')
+app.register_blueprint(unblock_user, url_prefix='/users')
+app.register_blueprint(change_password, url_prefix='/users')
+app.register_blueprint(forgot_password, url_prefix='/users')
+
+
 app.secret_key = "CodeSpecialist.com"
 
 
