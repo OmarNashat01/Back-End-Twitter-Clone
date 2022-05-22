@@ -1,8 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+
 
 #Importing all Routes
 
@@ -30,7 +28,7 @@ from Routes.change_password.change_password import change_password
 app = Flask(__name__, template_folder='Templates')
 app.config.from_pyfile('config.cfg')
 mail.init_app(app)
-app.config['UPLOAD_FOLDER'] = "E:\Back-End-Twitter-Clone\photos"
+
 
 
 
