@@ -54,7 +54,11 @@ def block_user(current_user):
     user_id = user_data["_id"]
     duration_in_minutes = user_data["minutes"]
     duration_in_minutes = int(duration_in_minutes)
-    
+
+    db_response = Database.User.find_one({"_id": ObjectId(user_id)})
+    if db_response == None:
+        return jsonify({"message": 'Target user ID not found'}), 404
+
     if current_user['admin'] == True:
         db_response = Database.blocked_users.find_one({'_id': user_id})
         if db_response == None:
@@ -62,7 +66,7 @@ def block_user(current_user):
             date_blocked = datetime.datetime.utcnow() + datetime.timedelta(minutes= duration_in_minutes + 120)
             date_time = date_blocked.strftime("%Y-%m-%d, %H:%M")
             db_response = Database.blocked_users.insert_one({'_id': user_id, 'token':token, 'unblock_date': date_time })
-            return jsonify({"message": "user has been blocked"}),200
+            return jsonify({"message": "The request was successful"}),200
         else:
             check_token = db_response['token']
             try:
@@ -71,7 +75,7 @@ def block_user(current_user):
                 db_response = Database.blocked_users.delete_one({'_id': user_id})
                 token = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= duration_in_minutes)}, "SecretKey1911")
                 db_response = Database.blocked_users.insert_one({'_id': user_id, 'token': token})
-                return jsonify({"message": "user has been blocked"}),200
+                return jsonify({"message": "The request was successful"}),200
 
         return jsonify({"message": "user is already blocked"}),400
     else:

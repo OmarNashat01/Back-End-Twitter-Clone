@@ -23,6 +23,8 @@ from Routes.user_unblock_user.user_unblock_user import user_unblock_user
 from Routes.get_blocked_user.get_blocked_users import get_blocked_users
 from Routes.forgot_password.forgot_password import forgot_password
 from Routes.change_password.change_password import change_password
+from Routes.block_user.post_block import block
+from Routes.block_user.get_blocked import getblock
 
 # Creating flask application
 app = Flask(__name__, template_folder='Templates')
@@ -37,6 +39,8 @@ mail.init_app(app)
 app.register_blueprint(Login, url_prefix='/Login')
 app.register_blueprint(GetAll, url_prefix='/users')
 app.register_blueprint(signup, url_prefix='/signup')
+app.register_blueprint(block, url_prefix='/admin')
+app.register_blueprint(getblock, url_prefix='/admin')
 app.register_blueprint(Home_app,url_prefix='/home')
 app.register_blueprint(followers, url_prefix='/users')
 app.register_blueprint(following, url_prefix='/users')
