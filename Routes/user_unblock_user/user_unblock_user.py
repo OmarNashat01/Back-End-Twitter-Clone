@@ -59,11 +59,8 @@ def singleuser(current_user):
 
     source_user = request.args.get('source_user_id')
     target_user = request.args.get('target_user_id')
-    try:
-        objInstance_source = ObjectId(source_user)
-        objInstance_target = ObjectId(target_user)
-    except:
-        return jsonify({"message": "Please, Enter a valid User ID"}), 400
+    objInstance_source = ObjectId(source_user)
+    objInstance_target = ObjectId(target_user)
 
     myquery1 = {"_id": objInstance_source}
     myquery2 = {"_id": objInstance_target}

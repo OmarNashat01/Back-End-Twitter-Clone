@@ -59,7 +59,7 @@ def block_user(current_user):
         db_response = Database.blocked_users.find_one({'_id': user_id})
         if db_response == None:
             token = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= duration_in_minutes)}, "SecretKey1911")
-            date_blocked = datetime.datetime.utcnow() + datetime.timedelta(minutes= duration_in_minutes)
+            date_blocked = datetime.datetime.utcnow() + datetime.timedelta(minutes= duration_in_minutes + 120)
             date_time = date_blocked.strftime("%Y-%m-%d, %H:%M")
             db_response = Database.blocked_users.insert_one({'_id': user_id, 'token':token, 'unblock_date': date_time })
             return jsonify({"message": "user has been blocked"}),200

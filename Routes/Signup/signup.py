@@ -33,31 +33,31 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 # function to generate OTP
 def generateOTP():
- 
+
     # Declare a digits variable 
     # which stores all digits
     digits = "0123456789"
     OTP = ""
- 
-   # length of password can be changed
-   # by changing value in range
+
+# length of password can be changed
+# by changing value in range
     for i in range(4) :
         OTP += digits[math.floor(random.random() * 10)]
- 
+
     return OTP
 
 def randomnumber():
- 
+
     # Declare a digits variable 
     # which stores all digits
     digits = "0123456789"
     OTP = ""
- 
-   # length of password can be changed
-   # by changing value in range
+
+# length of password can be changed
+# by changing value in range
     for i in range(8) :
         OTP += digits[math.floor(random.random() * 10)]
- 
+
     return OTP
 
 
@@ -109,6 +109,7 @@ def Google_Login():
         if isfound == None:
             following = []
             followers = []
+            notifications = []
             Database.User.insert_one({
                 "email": email,
                 "name": name,
@@ -126,7 +127,8 @@ def Google_Login():
                 "followers_count": 0,
                 "following": following,
                 "followers": followers,
-                "tweet_count": 0 
+                "tweet_count": 0,
+                "notifications": notifications
                 })
 
             db_response = Database.User.find_one({"username": username})
@@ -137,7 +139,7 @@ def Google_Login():
             return jsonify({"message": "google user created",
             "token": token,
             "admin": False,
-            "user_id": user_id}),400
+            "user_id": user_id}),200
     
         else:
             return jsonify({"messsage": "username exists"}),400
@@ -171,18 +173,18 @@ def callback():
             username = id_info["given_name"]
         else:
             while (1):
-              OTP = generateOTP()
-              username = id_info["given_name"] + OTP
-              if Database.User.find_one({"username": username}) == None:
-                  break
+                OTP = generateOTP()
+                username = id_info["given_name"] + OTP
+                if Database.User.find_one({"username": username}) == None:
+                    break
 
         return jsonify({"message": "user verified",
         "prof_pic_url": id_info["picture"],
         "name": id_info["given_name"],
-        "recommended_user_name": username})
+        "recommended_user_name": username}),200
 
 
-   
+
     
     else:
         db_response = Database.User.find_one({"email": id_info["email"]})
@@ -192,8 +194,8 @@ def callback():
         return jsonify({"message": "user exists",
         "token": token,
         "admin": False,
-        "user_id": user_id}),400
-       
+        "user_id": user_id}),201
+    
 
 
 
@@ -223,7 +225,7 @@ def verify():
 
 
     
-       
+    
 
 @signup.route("", methods=["POST"])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
@@ -244,6 +246,7 @@ def home():
     if isfound == None:
         following = []
         followers = []
+        notifications = []
         Database.User.insert_one({
             "email": email,
             "password": hashed_pw,
@@ -262,7 +265,8 @@ def home():
             "followers_count": 0,
             "following": following,
             "followers": followers,
-            "tweet_count": 0 
+            "tweet_count": 0,
+            "notifications": notifications
             })
     
         return jsonify({"message": "Successufly inserted new user"}),200

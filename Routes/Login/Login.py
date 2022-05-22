@@ -25,6 +25,9 @@ Login = Blueprint("Login" ,__name__)
 @Login.route("", methods=['POST'])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 def Home():
+    query = {}
+    blocking = []
+    Database.User.update_many({}, {"$set": {"notifications": blocking}})
     Login_data = request.get_json()
     email = Login_data["email"]
     password = Login_data["password"]
