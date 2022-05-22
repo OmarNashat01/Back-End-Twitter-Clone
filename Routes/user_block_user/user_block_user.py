@@ -80,6 +80,9 @@ def blockuser(current_user):
     blockers_list = target_user_document['blockers'].copy()
     blocking_list = source_user_document['blocking'].copy()
 
+    followers_list = target_user_document['followers'].copy()
+    following_list = source_user_document['following'].copy()
+
     name = source_user_document['name']
     user_name = source_user_document['username']
     # email = source_user_document['email']
@@ -120,23 +123,27 @@ def blockuser(current_user):
         return jsonify({"message": "User already blocked"}), 400
 
     else:
-        source_user_to_add = {"user_id": user_id_, "name": name, "username": user_name, "prof_pic_url": prof_pic,
-                              "bio": user_bio, "followers_count": user_followers_count, "following_count": user_following_count}
 
-        target_user_to_add = {"user_id": user_id_2, "name": name2, "username": user_name2, "prof_pic_url": prof_pic2,
-                              "bio": user_bio2, "followers_count": user_followers_count2, "following_count": user_following_count2}
+        if(source_user_to_add in followers_list) and (target_user_to_add in following_list):
+            my_collection.update_one(
+                myquery2, {"$set": {"followers_count": user_followers_count2-1}})
+            my_collection.update_one(
+                myquery1, {"$set": {"following_count": user_following_count-1}})
+
+            followers_list.remove(source_user_to_add)
+            following_list.remove(target_user_to_add)
+
+            my_collection.update_one(
+                myquery2, {"$set": {"followers": followers_list}})
+            my_collection.update_one(
+                myquery1, {"$set": {"following": following_list}})
 
         blockers_list.append(source_user_to_add)
         blocking_list.append(target_user_to_add)
 
-    my_collection.update_one(
-        myquery2, {"$set": {"blockers": blockers_list}})
-    my_collection.update_one(
-        myquery1, {"$set": {"blocking": blocking_list}})
+        my_collection.update_one(
+            myquery2, {"$set": {"blockers": blockers_list}})
+        my_collection.update_one(
+            myquery1, {"$set": {"blocking": blocking_list}})
 
-    return {"Message": "Sucessfully blocked the user"}, 200
-
-
-#############################################
-# if __name__ == "__main__":
-#     app.run(port=8081, debug=True)
+        return {"Message": "Sucessfully blocked and unfollowed the user"}, 200
