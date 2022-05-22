@@ -12,6 +12,7 @@ Tweet_app = Blueprint("Tweet_app", __name__)
 path = "C:\\Users\\LEGION\\Downloads\\photos"
 
 
+
 def findrecursive(ID, deletedids: list):
     x = comment.get_from_database_json(ObjectId(ID))
     if x is None:
@@ -19,6 +20,8 @@ def findrecursive(ID, deletedids: list):
     for comments in list(x["comments"]):
         findrecursive(comments, deletedids)
     deletedids.append(ID)
+
+
 
 @Tweet_app.route("", methods=["POST"])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
