@@ -87,9 +87,6 @@ def delete_one_retweet(current_user):
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def like_an_object(current_user):
-    check = check_block(current_user)
-    if check == 'banned':
-        return jsonify({"message": 'user is banned'}), 403
     json = request.json
     tweet = None
     try:
@@ -141,9 +138,6 @@ def unlike_an_object(current_user):
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def create_comment(current_user):
-    check = check_block(current_user)
-    if check == 'banned':
-        return jsonify({"message": 'user is banned'}), 403
     json1 = request.files
     json = request.form
     images = []
