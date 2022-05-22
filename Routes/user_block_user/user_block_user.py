@@ -59,11 +59,9 @@ def blockuser(current_user):
     data = request.get_json()
     source_user = data['source_user_id']
     target_user = data['target_user_id']
-    try:
-        objInstance_source = ObjectId(source_user)
-        objInstance_target = ObjectId(target_user)
-    except:
-        return jsonify({"message": "Please, Enter a valid User ID"}), 400
+    objInstance_source = ObjectId(source_user)
+    objInstance_target = ObjectId(target_user)
+
 
     my_collection = mydb["User"]
     myquery1 = {"_id": objInstance_source}
