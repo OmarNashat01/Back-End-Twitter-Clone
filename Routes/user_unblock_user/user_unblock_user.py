@@ -21,7 +21,7 @@ from Database.Database import Database as mydb
 
 # api = Api(app)
 
-unblock_user = Blueprint('unblock_user', __name__)
+user_unblock_user = Blueprint('user_unblock_user', __name__)
 
 
 def token_required(f):
@@ -50,7 +50,7 @@ def token_required(f):
 ############################################
 
 
-@unblock_user.route("/block", methods=["DELETE"])
+@user_unblock_user.route("/block", methods=["DELETE"])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def singleuser(current_user):
