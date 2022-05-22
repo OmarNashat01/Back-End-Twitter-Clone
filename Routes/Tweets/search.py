@@ -21,8 +21,8 @@ def get_all_tweets(current_user):
     retweets = collectionofretweets()
     if tweets.Tweets != []:
         tweets.Tweets = []
-    t = tweets.get_random_from_database(int(pag_token))
-    t1 = retweets.get_random_from_database(int(pag_token))
+    t = tweets.get_random_from_database(int(pag_token), ObjectId(current_user["_id"]))
+    t1 = retweets.get_random_from_database(int(pag_token),ObjectId(current_user["_id"]))
     if pag_token <= 0 or int(pag_token) is False:
         return {"400": "invalid pagination token,please enter an integer number above 0"}, 400
     elif t is True and t1 is True:

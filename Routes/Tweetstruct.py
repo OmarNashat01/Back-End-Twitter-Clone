@@ -525,8 +525,9 @@ class collectionoftweets:
                                     "comments": tweets[x]["comments"]})
         return self.Tweets == []
 
-    def get_random_from_database(self, pagtoken: int):
+    def get_random_from_database(self, pagtoken: int,current):
         tweets = list(col_of_tweets.find({"type": "tweet"}))
+        blockers = list(col_of_blocked.find({"source_user_id":current},{"_id":0,"source_user_id":0}))
         start = (pagtoken-1)*25
         end = pagtoken*25
         x1 = 0
@@ -538,24 +539,27 @@ class collectionoftweets:
             for x in range(start, x1):
                 ID = tweets[x]
                 user = col_of_users.find_one({"_id": ObjectId(ID["user_id"])})
-                self.Tweets.append({"tweet_id": str(tweets[x]["_id"]),
-                                    "user_id": str(tweets[x]["user_id"]),
-                                    "username": tweets[x]["username"],
-                                    "name": user["name"],
-                                    "bio": user["bio"],
-                                    "followers_count": user["followers_count"],
-                                    "following_count": user["followers_count"],
-                                    "prof_pic_url": tweets[x]["prof_pic_url"],
-                                    "text": tweets[x]["text"],
-                                    "created_at": tweets[x]["created_at"],
-                                    "videos": tweets[x]["videos"],
-                                    "images": tweets[x]["images"],
-                                    "type": tweets[x]["type"],
-                                    "like_count": tweets[x]["like_count"],
-                                    "liked_by_ids": tweets[x]["Liker_ids"],
-                                    "retweet_count": tweets[x]["retweet_count"],
-                                    "comment_count": tweets[x]["comment_count"],
-                                    "comments": tweets[x]["comments"]})
+                if blockers.count({"target_user_id":user["_id"]}) == 0:
+                    self.Tweets.append({"tweet_id": str(tweets[x]["_id"]),
+                                        "user_id": str(tweets[x]["user_id"]),
+                                        "username": tweets[x]["username"],
+                                        "name": user["name"],
+                                        "bio": user["bio"],
+                                        "followers_count": user["followers_count"],
+                                        "following_count": user["followers_count"],
+                                        "prof_pic_url": tweets[x]["prof_pic_url"],
+                                        "text": tweets[x]["text"],
+                                        "created_at": tweets[x]["created_at"],
+                                        "videos": tweets[x]["videos"],
+                                        "images": tweets[x]["images"],
+                                        "type": tweets[x]["type"],
+                                        "like_count": tweets[x]["like_count"],
+                                        "liked_by_ids": tweets[x]["Liker_ids"],
+                                        "retweet_count": tweets[x]["retweet_count"],
+                                        "comment_count": tweets[x]["comment_count"],
+                                        "comments": tweets[x]["comments"]})
+                else:
+                    pass
         elif x1 <= 0:
             return self.Tweets == []
 
@@ -563,24 +567,27 @@ class collectionoftweets:
             for x in range(start, end):
                 user = col_of_users.find_one(
                     {"_id": ObjectId(tweets[x]["user_id"])})
-                self.Tweets.append({"tweet_id": str(tweets[x]["_id"]),
-                                    "user_id": str(tweets[x]["user_id"]),
-                                    "username": tweets[x]["username"],
-                                    "name": user["name"],
-                                    "bio": user["bio"],
-                                    "followers_count": user["followers_count"],
-                                    "following_count": user["followers_count"],
-                                    "prof_pic_url": tweets[x]["prof_pic_url"],
-                                    "text": tweets[x]["text"],
-                                    "created_at": tweets[x]["created_at"],
-                                    "videos": tweets[x]["videos"],
-                                    "images": tweets[x]["images"],
-                                    "type": tweets[x]["type"],
-                                    "like_count": tweets[x]["like_count"],
-                                    "liked_by_ids": tweets[x]["Liker_ids"],
-                                    "retweet_count": tweets[x]["retweet_count"],
-                                    "comment_count": tweets[x]["comment_count"],
-                                    "comments": tweets[x]["comments"]})
+                if blockers.count({"target_user_id": user["_id"]}) == 0:
+                    self.Tweets.append({"tweet_id": str(tweets[x]["_id"]),
+                                        "user_id": str(tweets[x]["user_id"]),
+                                        "username": tweets[x]["username"],
+                                        "name": user["name"],
+                                        "bio": user["bio"],
+                                        "followers_count": user["followers_count"],
+                                        "following_count": user["followers_count"],
+                                        "prof_pic_url": tweets[x]["prof_pic_url"],
+                                        "text": tweets[x]["text"],
+                                        "created_at": tweets[x]["created_at"],
+                                        "videos": tweets[x]["videos"],
+                                        "images": tweets[x]["images"],
+                                        "type": tweets[x]["type"],
+                                        "like_count": tweets[x]["like_count"],
+                                        "liked_by_ids": tweets[x]["Liker_ids"],
+                                        "retweet_count": tweets[x]["retweet_count"],
+                                        "comment_count": tweets[x]["comment_count"],
+                                        "comments": tweets[x]["comments"]})
+                else:
+                    pass
         return self.Tweets == []
 
     def get_from_user_tweets_database(self, pagtoken: int, _id):
@@ -1134,8 +1141,10 @@ class collectionofretweets:
                                     "comments": tweets[x]["comments"]})
         return self.retweets == []
 
-    def get_random_from_database(self, pagtoken: int):
+    def get_random_from_database(self, pagtoken: int,current):
         tweets = list(col_of_tweets.find({"type": "retweet"}))
+        blockers = list(col_of_blocked.find(
+            {"source_user_id": current}, {"_id": 0, "source_user_id": 0}))
         start = (pagtoken-1)*25
         end = pagtoken*25
         x1 = 0
@@ -1164,26 +1173,29 @@ class collectionofretweets:
                         "retweet_count": tweet["retweet_count"],
                         "comment_count": tweet["comment_count"]
                     }
-                self.retweets.append({"tweet_id": str(tweets[x]["_id"]),
-                                    "user_id": str(tweets[x]["user_id"]),
-                                    "username": tweets[x]["username"],
-                                    "name": user["name"],
-                                    "bio": user["bio"],
-                                    "followers_count": user["followers_count"],
-                                    "following_count": user["followers_count"],
-                                    "prof_pic_url": tweets[x]["prof_pic_url"],
-                                    "quoted":tweets[x]["quoted"],
-                                    "tweet_refrenced": new_tweet,
-                                    "text": tweets[x]["text"],
-                                    "created_at": tweets[x]["created_at"],
-                                    "videos": tweets[x]["videos"],
-                                    "images": tweets[x]["images"],
-                                    "type": tweets[x]["type"],
-                                    "like_count": tweets[x]["like_count"],
-                                    "liked_by_ids": tweets[x]["Liker_ids"],
-                                    "retweet_count": tweets[x]["retweet_count"],
-                                    "comment_count": tweets[x]["comment_count"],
-                                    "comments": tweets[x]["comments"]})
+                if blockers.count({"target_user_id": user["_id"]}) == 0:
+                    self.retweets.append({"tweet_id": str(tweets[x]["_id"]),
+                                        "user_id": str(tweets[x]["user_id"]),
+                                        "username": tweets[x]["username"],
+                                        "name": user["name"],
+                                        "bio": user["bio"],
+                                        "followers_count": user["followers_count"],
+                                        "following_count": user["followers_count"],
+                                        "prof_pic_url": tweets[x]["prof_pic_url"],
+                                        "quoted":tweets[x]["quoted"],
+                                        "tweet_refrenced": new_tweet,
+                                        "text": tweets[x]["text"],
+                                        "created_at": tweets[x]["created_at"],
+                                        "videos": tweets[x]["videos"],
+                                        "images": tweets[x]["images"],
+                                        "type": tweets[x]["type"],
+                                        "like_count": tweets[x]["like_count"],
+                                        "liked_by_ids": tweets[x]["Liker_ids"],
+                                        "retweet_count": tweets[x]["retweet_count"],
+                                        "comment_count": tweets[x]["comment_count"],
+                                        "comments": tweets[x]["comments"]})
+            else:
+                pass
         elif x1 <= 0:
             return self.retweets == []
 
@@ -1208,26 +1220,29 @@ class collectionofretweets:
                         "retweet_count": tweet["retweet_count"],
                         "comment_count": tweet["comment_count"]
                     }
-                self.retweets.append({"tweet_id": str(tweets[x]["_id"]),
-                                    "user_id": str(tweets[x]["user_id"]),
-                                    "username": tweets[x]["username"],
-                                    "name": user["name"],
-                                    "bio": user["bio"],
-                                    "followers_count": user["followers_count"],
-                                    "following_count": user["followers_count"],
-                                    "prof_pic_url": tweets[x]["prof_pic_url"],
-                                    "quoted": tweets[x]["quoted"],
-                                    "tweet_refrenced": new_tweet,
-                                    "text": tweets[x]["text"],
-                                    "created_at": tweets[x]["created_at"],
-                                    "videos": tweets[x]["videos"],
-                                    "images": tweets[x]["images"],
-                                    "type": tweets[x]["type"],
-                                    "like_count": tweets[x]["like_count"],
-                                    "liked_by_ids": tweets[x]["Liker_ids"],
-                                    "retweet_count": tweets[x]["retweet_count"],
-                                    "comment_count": tweets[x]["comment_count"],
-                                    "comments": tweets[x]["comments"]})
+                if blockers.count({"target_user_id": user["_id"]}) == 0:
+                    self.retweets.append({"tweet_id": str(tweets[x]["_id"]),
+                                        "user_id": str(tweets[x]["user_id"]),
+                                        "username": tweets[x]["username"],
+                                        "name": user["name"],
+                                        "bio": user["bio"],
+                                        "followers_count": user["followers_count"],
+                                        "following_count": user["followers_count"],
+                                        "prof_pic_url": tweets[x]["prof_pic_url"],
+                                        "quoted": tweets[x]["quoted"],
+                                        "tweet_refrenced": new_tweet,
+                                        "text": tweets[x]["text"],
+                                        "created_at": tweets[x]["created_at"],
+                                        "videos": tweets[x]["videos"],
+                                        "images": tweets[x]["images"],
+                                        "type": tweets[x]["type"],
+                                        "like_count": tweets[x]["like_count"],
+                                        "liked_by_ids": tweets[x]["Liker_ids"],
+                                        "retweet_count": tweets[x]["retweet_count"],
+                                        "comment_count": tweets[x]["comment_count"],
+                                        "comments": tweets[x]["comments"]})
+                else:
+                    pass
         return self.retweets == []
     
     def get_from_liked_tweets_database(self, pagtoken: int, _id):

@@ -6,7 +6,6 @@ from bson import ObjectId
 import operator
 import pymongo
 import numpy
-import os
 
 Tweet_app = Blueprint("Tweet_app", __name__)
 path = "C:\\Users\\LEGION\\Downloads\\photos"
@@ -143,7 +142,7 @@ def get_all_tweets(current_user):
     tweets = collectionoftweets()
     if tweets.Tweets != []:
         tweets.Tweets = []
-    t = tweets.get_random_from_database(int(pag_token))
+    t = tweets.get_random_from_database(int(pag_token),ObjectId(current_user["_id"]))
     if pag_token <= 0 or int(pag_token) is False:
         return {"400": "invalid pagination token,please enter an integer number above 0"}, 400
     elif t is True:
@@ -323,8 +322,8 @@ def get_one_comment(current_user):
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def get_tweet_count_using_a_string_query_recent(current_user):
-   # if current_user["admin"] == False:
-    #    return {"501": "permission not granted"}, 501
+    if current_user["admin"] == False:
+        return {"501": "permission not granted"}, 501
     q = request.args.get("q",default=None,type = str)
     end_datetime = (datetime.strptime(
         (datetime.now()).strftime("%Y-%m-%d"), '%Y-%m-%d'))
@@ -357,8 +356,8 @@ def get_tweet_count_using_a_string_query_recent(current_user):
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def get_tweet_count_using_a_string_query_ALL(current_user):
-    #if current_user["admin"] == False:
-     #   return {"501": "permission not granted"}, 501
+    if current_user["admin"] == False:
+        return {"501": "permission not granted"}, 501
     q = request.args.get("q", default=None, type=str)
     v = list(col_of_tweets.find({}, {"created_at": 1, "_id": 0}))
     v.sort(
@@ -466,7 +465,7 @@ def get_all_retweets(current_user):
     tweets = collectionofretweets()
     if tweets.retweets != []:
         tweets.retweets = []
-    t = tweets.get_random_from_database(int(pag_token))
+    t = tweets.get_random_from_database(int(pag_token), ObjectId(current_user["_id"]))
     if pag_token <= 0 or int(pag_token) is False:
         return {"400": "invalid pagination token,please enter an integer number above 0"}, 400
     elif t is True:
