@@ -55,77 +55,63 @@ def token_required(f):
 @token_required
 def singleuser(current_user):
     # print(request.args["_id"])
+    my_collection = mydb["User"]
 
-    if request.method == 'DELETE':
-        my_collection = mydb["User"]
+    source_user = request.args.get('source_user_id')
+    target_user = request.args.get('target_user_id')
+    try:
+        objInstance_source = ObjectId(source_user)
+        objInstance_target = ObjectId(target_user)
+    except:
+        return jsonify({"message": "Please, Enter a valid User ID"}), 400
 
-        source_user = request.args.get('source_user_id')
-        target_user = request.args.get('target_user_id')
-        try:
-            objInstance_source = ObjectId(source_user)
-            objInstance_target = ObjectId(target_user)
-        except:
-            return jsonify({"message": "Please, Enter a valid User ID"}), 400
+    myquery1 = {"_id": objInstance_source}
+    myquery2 = {"_id": objInstance_target}
 
-        myquery1 = {"_id": objInstance_source}
-        myquery2 = {"_id": objInstance_target}
+    filter = {"_id": 0, 'password': 0}
+    source_user_document = my_collection.find_one(
+        myquery1, filter)  # Source User to add to the followers list
+    target_user_document = my_collection.find_one(myquery2, filter)
 
-        filter = {"_id": 0, 'password': 0}
-        source_user_document = my_collection.find_one(
-            myquery1, filter)  # Source User to add to the followers list
-        target_user_document = my_collection.find_one(myquery2, filter)
+    if not source_user_document or not target_user_document:
+        return {"message": "User Doesn't Exist"}, 404
 
-        if not source_user_document or not target_user_document:
-            return {"message": "User Doesn't Exist"}, 404
+    blockers_list = target_user_document['blockers'].copy()
+    blocking_list = source_user_document['blocking'].copy()
 
-        blockers_list = target_user_document['blockers'].copy()
-        blocking_list = source_user_document['blocking'].copy()
+    name = source_user_document['name']
+    user_name = source_user_document['username']
+    user_id_ = source_user
+    prof_pic = source_user_document['prof_pic_url']
+    user_bio = source_user_document['bio']
+    user_followers_count = source_user_document['followers_count']
+    user_following_count = source_user_document['following_count']
 
-        name = source_user_document['name']
-        user_name = source_user_document['username']
-        #email = source_user_document['email']
-        user_id_ = source_user
-        prof_pic = source_user_document['prof_pic_url']
-        user_bio = source_user_document['bio']
-        user_followers_count = source_user_document['followers_count']
-        user_following_count = source_user_document['following_count']
+    source_user_to_add = {"user_id": user_id_, "name": name, "username": user_name, "prof_pic_url": prof_pic,
+                          "bio": user_bio, "followers_count": user_followers_count, "following_count": user_following_count}
 
-        source_user_to_add = {"user_id": user_id_, "name": name, "username": user_name, "prof_pic_url": prof_pic,
-                              "bio": user_bio, "followers_count": user_followers_count, "following_count": user_following_count}
+    #################
 
-        #################
+    name2 = target_user_document['name']
+    user_name2 = target_user_document['username']
+    user_id_2 = target_user
+    prof_pic2 = target_user_document['prof_pic_url']
+    user_bio2 = target_user_document['bio']
+    user_followers_count2 = target_user_document['followers_count']
+    user_following_count2 = target_user_document['following_count']
 
-        name2 = target_user_document['name']
-        user_name2 = target_user_document['username']
-        #email2 = target_user_document['email']
-        user_id_2 = target_user
-        prof_pic2 = target_user_document['prof_pic_url']
-        user_bio2 = target_user_document['bio']
-        user_followers_count2 = target_user_document['followers_count']
-        user_following_count2 = target_user_document['following_count']
+    target_user_to_add = {"user_id": user_id_2, "name": name2, "username": user_name2, "prof_pic_url": prof_pic2,
+                          "bio": user_bio2, "followers_count": user_followers_count2, "following_count": user_following_count2}
 
-        target_user_to_add = {"user_id": user_id_2, "name": name2, "username": user_name2, "prof_pic_url": prof_pic2,
-                              "bio": user_bio2, "followers_count": user_followers_count2, "following_count": user_following_count2}
+    #################
 
-        #################
-
-        if (source_user_to_add in blockers_list) and (target_user_to_add in blocking_list):
-
-            blockers_list.remove(source_user_to_add)
-            blocking_list.remove(target_user_to_add)
-        else:
-            return jsonify({"message": " User already unblocked"}), 400
-
+    if (source_user_to_add in blockers_list) and (target_user_to_add in blocking_list):
+        blockers_list.remove(source_user_to_add)
+        blocking_list.remove(target_user_to_add)
         my_collection.update_one(
             myquery2, {"$set": {"blockers": blockers_list}})
         my_collection.update_one(
             myquery1, {"$set": {"blocking": blocking_list}})
-
         return jsonify({"Message": "Unblocked the user successfully"}), 200
-
     else:
-        return jsonify({"Message": "Access Not allowed"}), 400
-
-    #############################################
-# if __name__ == "__main__":
-#     app.run(port=8081, debug=True)
+        return jsonify({"Message": "User not blocked"}), 400
