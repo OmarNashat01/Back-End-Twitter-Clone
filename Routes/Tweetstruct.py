@@ -6,10 +6,7 @@ from datetime import datetime
 from bson import ObjectId
 from functools import wraps
 from jwt import decode
-from PIL import Image
 import re
-import chardet
-import gridfs
 
 app = Flask(__name__)
 x = Api(app)
