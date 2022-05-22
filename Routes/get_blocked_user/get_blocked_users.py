@@ -66,7 +66,7 @@ def blockuser(current_user):
             return {"message": "User Doesn't Exist"}, 404
         blocking_list = user_document['blocking']
 
-        return {"blocking": blocking_list}
+        return {"blocking": blocking_list}, 200
 
 
 # if __name__ == "__main__":
