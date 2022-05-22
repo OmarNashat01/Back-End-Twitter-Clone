@@ -16,11 +16,13 @@ from Routes.Signup.signup import signup, mail
 from Routes.get_me.get_me import get_me
 from Routes.get_user.get_user import get_user
 from Routes.update_user.update_user import update_user
-from Routes.block_user.post_block import block
-from Routes.block_user.get_blocked import getblock
-
-
-
+from Routes.Tweets.extra import Tweet_app1
+from Routes.Tweets.search import Home_app
+from Routes.user_block_user.user_block_user import user_block_user
+from Routes.user_unblock_user.user_unblock_user import user_unblock_user
+from Routes.get_blocked_user.get_blocked_users import get_blocked_users
+from Routes.forgot_password.forgot_password import forgot_password
+from Routes.change_password.change_password import change_password
 
 # Creating flask application
 app = Flask(__name__, template_folder='Templates')
@@ -35,20 +37,24 @@ mail.init_app(app)
 app.register_blueprint(Login, url_prefix='/Login')
 app.register_blueprint(GetAll, url_prefix='/users')
 app.register_blueprint(signup, url_prefix='/signup')
-
+app.register_blueprint(Home_app,url_prefix='/home')
 app.register_blueprint(followers, url_prefix='/users')
 app.register_blueprint(following, url_prefix='/users')
 app.register_blueprint(new_accounts_count, url_prefix='/admin/statistics')
 app.register_blueprint(retweets_count, url_prefix='/admin/statistics')
 app.register_blueprint(Tweet_app, url_prefix='/tweets')
+app.register_blueprint(Tweet_app1, url_prefix='/users')
 app.register_blueprint(Tweet_stats, url_prefix='/admin/statistics')
 
 app.register_blueprint(get_me, url_prefix='/users')
 app.register_blueprint(get_user, url_prefix='/users')
 app.register_blueprint(update_user, url_prefix='/users')
-app.register_blueprint(block, url_prefix='/admin')
-app.register_blueprint(getblock, url_prefix ='/admin')
-app.secret_key = "CodeSpecialist.com"
+
+app.register_blueprint(user_block_user, url_prefix='/users')
+app.register_blueprint(user_unblock_user, url_prefix='/users')
+app.register_blueprint(get_blocked_users, url_prefix='/users')
+app.register_blueprint(forgot_password, url_prefix='/users')
+app.register_blueprint(change_password, url_prefix='/users')
 
 
 CORS(app)

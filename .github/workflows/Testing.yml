@@ -28,6 +28,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: Kubernetes Set Context
+        uses: Azure/k8s-set-context@v2
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
       -
         name: Push old version to old image
         run: |
@@ -42,13 +48,8 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend_twitterclone:latest
-      -  
-        name: Create kubeconfig
-        run: |
-          mkdir ${HOME}/.kube
-          cat ${{ secrets.KUBE_CONFIG }}|base64 --decode > ${HOME}/.kube/config
-          export KUBECONFIG=${HOME}/.kube/conf
+
       - 
         name: Restart deployment
-        run: kubectl --kubeconfig ${HOME}/.kube/config rollout restart deployment/twitterclone-team3-deployment
+        run: kubectl rollout restart deployment/twitterclone-team3-deployment
     
