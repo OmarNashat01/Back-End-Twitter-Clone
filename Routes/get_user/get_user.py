@@ -48,47 +48,37 @@ def token_required(f):
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def singleuser(current_user):
-    # print(request.args["_id"])
-    try:
-        query = {"_id": ObjectId(request.args["_id"])}
-        user = mydb.User.find_one(query)
-        if(not user):
-            return Response(
-                response=json.dumps(
-                    {"message": "User ID not found"
-                     }),
-                status=404,
-                mimetype="application/json"
-            )
-        user_to_get = {"_id": request.args["_id"]}
-        user_id = request.args["_id"]
-        db_response = mydb.User.find_one(user_to_get)
-        if 'password' in user:
-            del user['password']
+
+    query = {"_id": ObjectId(request.args["_id"])}
+    user = mydb.User.find_one(query)
+    if user == None:
+        print("la2")
+        return Response(
+            response=json.dumps(
+                {"message": "User ID not found"
+                }),
+            status=404,
+            mimetype="application/json"
+        )
+    else:
+        db_response = mydb.User.find_one(query)
+        if 'password' in db_response:
+            del db_response['password']
         if 'notifications' in user:
-            del user['db_response']
-        user["creation_date"] = user["creation_date"].date()
-        user["creation_date"] = user["creation_date"].strftime("%Y-%m-%d")
-        user["_id"] = str(user["_id"])
+            del db_response['notifications']
+        db_response["creation_date"] = db_response["creation_date"].date()
+        db_response["creation_date"] = db_response["creation_date"].strftime("%Y-%m-%d")
+        db_response["_id"] = str(db_response["_id"])
         # print(db_response)
         return Response(
             response=json.dumps(
                 {"message": "The request was succesful",
-                 "user": user
-                 }),
+                "user": db_response
+                }),
             status=200,
             mimetype="application/json")
-    except Exception as ex:
-        print("*********")
-        print(ex)
-        print("*********")
-        return Response(
-            response=json.dumps(
-                {"message": "User ID not found"
-                 }),
-            status=404,
-            mimetype="application/json")
 
+   
 
 #############################################
 # if __name__ == "__main__":
