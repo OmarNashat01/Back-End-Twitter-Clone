@@ -69,6 +69,10 @@ def block_user(current_user):
                 del db_response['password']
             if 'notifications' in db_response:
                 del db_response['notifications']
+            if 'blockers' in db_response:
+                del db_response["blockers"]
+            if 'blocking' in db_response:
+                del db_response["blocking"]
             db_response["creation_date"] = db_response["creation_date"].date()
             db_response["creation_date"] = db_response["creation_date"].strftime("%Y-%m-%d")
             db_response["_id"] = str(db_response["_id"])
