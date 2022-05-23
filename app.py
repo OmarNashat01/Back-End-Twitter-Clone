@@ -31,6 +31,8 @@ app = Flask(__name__, template_folder='Templates')
 app.config.from_pyfile('config.cfg')
 mail.init_app(app)
 
+app.secret_key = "MakO"
+
 
 
 
