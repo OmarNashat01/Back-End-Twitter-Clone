@@ -112,6 +112,8 @@ def get_one_tweet(current_user):
     if comments.Tweets != []:
         comments.Tweets = []
     comments.get_from_tweet_comments_database(1,ObjectId(Id))
+    x = list(col_of_tweets.find(
+        {"refrenced_tweet_id": ObjectId(Id)}, {"user_id": 1, "_id": 0}))
     ID = t1.user_id
     user = col_of_users.find_one({"_id": ObjectId(ID)})
     if t is None:
@@ -132,7 +134,8 @@ def get_one_tweet(current_user):
                     "liked_by_ids": t1.Liked_by,
                     "retweet_count": t1.retweet_count,
                     "comment_count": t1.comment_count,
-                    "comments": comments.Tweets}}), 200
+                    "comments": comments.Tweets,
+                    "retweeters_ids": x}}), 200
 
 
 @Tweet_app.route("/random", methods=["GET"])
