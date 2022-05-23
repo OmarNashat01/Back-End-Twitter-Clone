@@ -85,7 +85,7 @@ def delete_one_tweet(current_user):
         commentstobedeleted += 1
         if x["Liker_ids"] != []:
            for dates in x["Liker_ids"]:
-               datestobedeleted.append(x["date"])
+               datestobedeleted.append(dates["date"])
         comment.delete_from_database(ObjectId(id))
     if datestobedeleted != []:
         for date in datestobedeleted:

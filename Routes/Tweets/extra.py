@@ -78,6 +78,27 @@ def delete_one_retweet(current_user):
     col_of_tweets.update_one({"_id": ObjectId(tweetid)}, {
                              "$inc": {"retweet_count": -1}})
     retweet.delete_from_database(ObjectId(Id))
+    if bool(retweeter["quoted"]) is True: 
+        ids = []
+        findrecursive(Id, ids)
+        commentstobedeleted = 0
+        datestobedeleted = []
+        print(ids)
+        for id in ids:
+            x = comment.get_from_database_json(ObjectId(Id))
+            commentstobedeleted += 1
+            if x["Liker_ids"] != []:
+                for dates in x["Liker_ids"]:
+                    datestobedeleted.append(dates["date"])
+            comment.delete_from_database(ObjectId(id))
+        if datestobedeleted != []:
+            for dates in datestobedeleted:
+                col_of_stats.update_one({"_id": ObjectId(objectid_of_like_dates)}, {
+                                        "$pull": {"likes": dates}})
+    tweetid = col_of_tweets.find_one({"refrenced_tweet_id": Id})
+    if tweetid != None:
+        col_of_tweets.update_one({"_id": ObjectId(tweetid["_id"])}, {
+                                "$inc": {"retweet_count": -1}})
     if retweet.get_from_database_json(ObjectId(Id)) != None:
         return jsonify({"404": "delete operation is unavailable"}), 404
     return jsonify({"200": "successfull operation,tweet was deleted"}), 200
@@ -216,7 +237,7 @@ def delete_one_comment(current_user):
         commentstobedeleted += 1
         if x["Liker_ids"] != []:
            for dates in x["Liker_ids"]:
-               datestobedeleted.append(x["date"])
+               datestobedeleted.append(dates["date"])
         comment.delete_from_database(ObjectId(id))
     print(tweetid["_id"])
     if datestobedeleted != []:
