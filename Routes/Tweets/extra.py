@@ -14,6 +14,7 @@ Tweet_app1 = Blueprint("Tweet_app1",__name__)
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def create_retweet(current_user):
+    print("hi")
     check = check_block(current_user)
     if check == 'banned':
         return jsonify({"message": 'user is banned'}), 403
@@ -22,6 +23,7 @@ def create_retweet(current_user):
     if request.files == None and request.form == None:
         return {"400":"Invalid empty parameteres"},400
     text = None
+    print("hi")
     videos = []
     images = []
     urls = []
@@ -40,8 +42,10 @@ def create_retweet(current_user):
         ObjectId(json["tweet_id"])
     except:
         return {"400":"invalid tweet id"},400
+    print("hi")
     if Tweet.get_from_database_json(ObjectId(json["tweet_id"])) is None:
         return {"405": "refrenced tweet does not exist in the database"}, 405
+    print("hi")
     tweet = retweet(None, current_user["_id"],
                     text, videos, urls, ObjectId(json["tweet_id"]))
     tweet.set_pic(current_user["prof_pic_url"])
@@ -52,6 +56,7 @@ def create_retweet(current_user):
                              "$inc": {"retweet_count": 1}})
     if json["tweet_id"] is None or json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text is "" and tweet.videos_urls is [] and tweet.images_urls is []):
         return {"400":"Invalid parameters"}, 400
+    print("hi")
     if tweet.save_to_database() is False:
         return {"200": "successfull retweet creation"}, 200
     else:
@@ -144,7 +149,7 @@ def unlike_an_object(current_user):
     if list(col_of_users.find({"_id": ObjectId(current_user["_id"])})) == []:
         return {"404": "user  does not exist in the database"}, 404
     if col_of_tweets.find_one({"_id": ObjectId(Id), "Liker_ids":{"liker":str(current_user["_id"])}},{"_id":0,"Liker_ids.Liker":1}) is None:
-        return {"406": "operation failed as user does not like the tweet"}, 406
+        return {"406": "operation failed as user does not like the tweetshfhsdk"}, 406
     dateoflike = col_of_tweets.find_one(
         {"_id": ObjectId(Id), "Liker_ids.Liker": Id}, {"Liker_ids.date": 1})
     col_of_tweets.update_one({"_id": ObjectId(Id)}, {"$pull": {"Liker_ids": {"liker":
@@ -167,7 +172,7 @@ def create_comment(current_user):
        images = json1.getlist('img')
        videos = json1.getlist('vid')
        print(json)
-       #urls = saveimages(images)
+       urls = saveimages(images)
     else:
        videos = []
        print(json)
