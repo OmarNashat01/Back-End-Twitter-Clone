@@ -57,10 +57,7 @@ def blockuser(current_user):
     if request.method == 'GET':
 
         user_id = request.args.get('user_id')
-        try:
-            objInstance_user = ObjectId(user_id)
-        except:
-            return jsonify({"message": "Please, Enter a valid User ID"}), 400
+        objInstance_user = ObjectId(user_id)
 
         my_collection = mydb["User"]
         myquery = {"_id": objInstance_user}
@@ -69,7 +66,7 @@ def blockuser(current_user):
             return {"message": "User Doesn't Exist"}, 404
         blocking_list = user_document['blocking']
 
-        return {"blocking": blocking_list}
+        return {"blocking": blocking_list}, 200
 
 
 # if __name__ == "__main__":

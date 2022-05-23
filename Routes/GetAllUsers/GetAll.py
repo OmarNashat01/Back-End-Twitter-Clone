@@ -40,29 +40,8 @@ def token_required(f):
        
     return decorated
 
-def check_block(token):
-    
-    try:
-        data = jwt.decode(token, "SecretKey1911", "HS256")
-        user_id = ObjectId(data['_id'])
-        current_user = Database.User.find_one({'_id': user_id})
-
-    except:
-        return jsonify({'message': 'Token is invalid!'}), 401
-
-    user_id = str(current_user['_id'])
-    db_response = Database.blocked_users.find_one({'_id': user_id})
-
-    if db_response == None:
-        return jsonify("not_banned")
-    else:
-        try:
-            jwt.decode(db_response['token'], "SecretKey1911", "HS256")
-        except:
-            Database.blocked_users.delete_one({'_id': user_id})
-            return 'not_banned'
-
-    return 'banned'
+def filter_search_result():
+    pass
 
 
         
@@ -117,7 +96,6 @@ def GET_ALL(current_user):
             #else:
                 #  prev_page = '/users/all?limit=' + str(limit) + '&offset=' + str(offset - limit)
 
-        print(output)
 
         
         return jsonify({"users": output}), 200
@@ -133,6 +111,8 @@ def GET_ALL(current_user):
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def search_user(current_user):
+    blockers = []
+    blocking = []
     paginated_list = []
     empty_array = []
     users = []
@@ -160,7 +140,6 @@ def search_user(current_user):
     count = len(users)
 
     if (offset > count - 1):
-        print("mako")
         return jsonify({"users": empty_array}), 204
 
     
@@ -170,7 +149,31 @@ def search_user(current_user):
         if i+1== limit:
             break
 
-    print(paginated_list)
+    
+
+
+ 
+    for i in current_user["blockers"]:
+        for x in range(len(paginated_list)):
+           if i["user_id"] == paginated_list[x]["_id"]:
+               del paginated_list[x]
+               break
+                    
+
+
+    
+    for i in current_user["blocking"]:
+        for x in range(len(paginated_list)):
+            if i["user_id"] == paginated_list[x]['_id']:
+                del paginated_list[x]
+                break
+
+    for i in paginated_list:
+        del i["blocking"]
+        del i["blockers"]
+
+     
+
 
     return jsonify({"users": paginated_list}), 200
 
