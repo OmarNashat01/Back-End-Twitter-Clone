@@ -85,7 +85,7 @@ def delete_one_tweet(current_user):
         commentstobedeleted += 1
         if x["Liker_ids"] != []:
            for dates in x["Liker_ids"]:
-               datestobedeleted.append(x["date"])
+               datestobedeleted.append(dates["date"])
         comment.delete_from_database(ObjectId(id))
     if datestobedeleted != []:
         for date in datestobedeleted:
@@ -109,6 +109,8 @@ def get_one_tweet(current_user):
         return {"400": "Invalid Id"}, 400
     t = t1.get_from_database(Id)
     comments = collectionofcomments()
+    if comments.Tweets != []:
+        comments.Tweets = []
     comments.get_from_tweet_comments_database(1,ObjectId(Id))
     ID = t1.user_id
     user = col_of_users.find_one({"_id": ObjectId(ID)})
@@ -294,6 +296,8 @@ def get_one_comment(current_user):
         return {"400": "Invalid Id"}, 400
     t = t1.get_from_database(Id)
     comments = collectionofcomments()
+    if comments.Tweets != []:
+        comments.Tweets = []
     comments.get_from_tweet_comments_database(1,ObjectId()) 
     ID = t1.user_id
     user = col_of_users.find_one({"_id": ObjectId(ID)})
@@ -538,6 +542,8 @@ def get_one_retweet(current_user):
         return {"400": "Invalid Id"}, 400
     t = t1.get_from_database(Id)
     comments = collectionofcomments()
+    if comments.Tweets != []:
+        comments.Tweets = []
     comments.get_from_tweet_comments_database(1, ObjectId(Id))
     ID = t1.user_id
     user = col_of_users.find_one({"_id": ObjectId(ID)})
@@ -550,6 +556,8 @@ def get_one_retweet(current_user):
     else:
         user = col_of_users.find_one({"_id": ObjectId(tweet["user_id"])})
         comments = collectionofcomments()
+        if comments.Tweets != []:
+            comments.Tweets = []
         comments.get_from_tweet_comments_database(1, ObjectId(tweet["_id"]))
         new_tweet = {
                     "tweet_id": str(tweet["_id"]),
