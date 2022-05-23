@@ -37,7 +37,7 @@ def saveimages(files):
        c += 1    
     for x in range(0,c):
         z = files[x]
-        z.save(f"http://45.79.245.94:5000//storage//{z.filename}")
+        z.save(f"storage//{z.filename}")
         arr.append(f"http://45.79.245.94:5000//storage//{z.filename}")
     return arr
 
