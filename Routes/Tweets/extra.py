@@ -143,8 +143,7 @@ def unlike_an_object(current_user):
         return {"404": "liked tweet  does not exist in the database"}, 404
     if list(col_of_users.find({"_id": ObjectId(current_user["_id"])})) == []:
         return {"404": "user  does not exist in the database"}, 404
-    if list(col_of_tweets.find({"_id": ObjectId(Id), "Liker_ids.liker": {
-            "$in": [str(current_user["_id"])]}})) == []:
+    if col_of_tweets.find_one({"_id": ObjectId(Id), "Liker_ids":{"liker":str(current_user["_id"])}},{"_id":0,"Liker_ids.Liker":1}) is None:
         return {"406": "operation failed as user does not like the tweet"}, 406
     dateoflike = col_of_tweets.find_one(
         {"_id": ObjectId(Id), "Liker_ids.Liker": Id}, {"Liker_ids.date": 1})
