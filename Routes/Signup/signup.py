@@ -150,6 +150,7 @@ def Google_Login():
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 def callback():
     flow.fetch_token(authorization_response=request.url)
+    print(session)
     if not session["state"] == request.args["state"]:
         abort(500)  # State does not match!
 
