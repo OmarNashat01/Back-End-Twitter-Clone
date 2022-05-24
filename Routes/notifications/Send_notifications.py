@@ -3,7 +3,7 @@ from flask import Flask, jsonify,request
 import pymongo
 from bson.objectid import ObjectId
 from datetime import date, datetime, timedelta
-from push_functions import get_device_token , push_notification
+from Routes.notifications.push_functions import get_device_token , push_notification
 ### integration
 from Database.Database import Database as mydb
 from flask_cors import cross_origin

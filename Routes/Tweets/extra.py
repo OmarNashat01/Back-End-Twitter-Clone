@@ -6,6 +6,7 @@ from bson import ObjectId
 import operator
 import pymongo
 import numpy
+from Routes.notifications.Send_notifications import send_notification
 
 Tweet_app1 = Blueprint("Tweet_app1",__name__)
 
@@ -131,6 +132,8 @@ def like_an_object(current_user):
                                                                                            str(current_user["_id"]), "date": datetime.now().strftime("%Y-%m-%d")}}, "$inc": {"like_count": 1}})
     col_of_stats.update_one({"_id": ObjectId(objectid_of_like_dates)}, {"$push": {
                             "likes": datetime.now().strftime("%Y-%m-%d")}})
+    tweet = col_of_tweets.find_one({"_id": ObjectId(json["tweet_id"])})
+    send_notification(notification_type = "tweet_liked_event",user_receiving_id = str(tweet["user_id"]),liker_name = current_user["username"])
     return {"200": "tweet successfully liked"}, 200
 
 

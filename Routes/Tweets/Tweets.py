@@ -6,6 +6,7 @@ from bson import ObjectId
 import operator
 import pymongo
 import numpy
+from Routes.notifications.Send_notifications import send_notification
 
 Tweet_app = Blueprint("Tweet_app", __name__)
 path = "C:\\Users\\LEGION\\Downloads\\photos"
@@ -54,6 +55,7 @@ def create_tweet(current_user):
     if json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text == None and tweet.videos_urls == [] and tweet.images_urls == []):
         return {"400", "Invalid parameters"}, 400
     if tweet.save_to_database() is False:
+        send_notification(notification_type = "user_tweeted_event",user_tweeted_id = current_user["_id"])
         return {"200": f"successfull tweet creation with id:{tweet.needed.inserted_id}"}, 200
     else:
         return {"404": "operation failed"}, 404

@@ -14,7 +14,7 @@ from functools import wraps
 from bson.objectid import ObjectId
 import sys
 sys.path.append("..")
-from notifications.Send_notifications import send_notification
+from Routes.notifications.Send_notifications import send_notification
 
 
 
