@@ -413,6 +413,7 @@ class Tweet(Resource):
         self.creation_at = date
 
     def save_to_database(self):
+        print(self.creation_at)
         col_of_tweets.insert_one({
             "type": "tweet",
             "tweet_id": self._id,
@@ -1659,6 +1660,8 @@ class collectionofcomments:
     def get_from_tweet_comments_database(self, pagtoken: int, _id):
         tweet = col_of_tweets.find_one({"_id":_id})
         comment_ids = []
+        if tweet["comments"] == []:
+            return []
         for com in list(tweet["comments"]):
             comment_ids.append(ObjectId(com))
         tweets = list(col_of_tweets.find({"type": "comment","_id":{"$in":comment_ids}}))

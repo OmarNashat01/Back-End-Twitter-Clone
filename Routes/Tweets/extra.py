@@ -50,7 +50,7 @@ def create_retweet(current_user):
                     text, videos, urls, ObjectId(json["tweet_id"]))
     tweet.set_pic(current_user["prof_pic_url"])
     tweet.set_name(current_user["username"])
-    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
+    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
     tweet.setbool(bool(json["quoted"]))
     col_of_tweets.update_one({"_id": ObjectId(json["tweet_id"])}, {
                              "$inc": {"retweet_count": 1}})
@@ -184,7 +184,7 @@ def create_comment(current_user):
                        json["text"],videos , urls)
     comments.set_pic(current_user["prof_pic_url"])
     comments.set_name(current_user["username"])
-    comments.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
+    comments.set_creation_date(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
     print("yes-------------------")
     try:
         ObjectId(json["tweet_id"])

@@ -49,7 +49,8 @@ def create_tweet(current_user):
     print(current_user["_id"])
     tweet.set_pic(current_user["prof_pic_url"])
     tweet.set_name(current_user["username"])
-    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
+    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+    print(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
     if json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text == None and tweet.videos_urls == [] and tweet.images_urls == []):
         return {"400", "Invalid parameters"}, 400
     if tweet.save_to_database() is False:
@@ -107,7 +108,10 @@ def get_one_tweet(current_user):
         return {"400": "Invalid Id"}, 400
     if Id == None or str(Id) == "":
         return {"400": "Invalid Id"}, 400
+    if col_of_tweets.find({"_id": ObjectId(Id)}) is None:
+        return {"404":"tweet doesnt exist in database"},404
     t = t1.get_from_database(Id)
+    print(t1.Text)
     comments = collectionofcomments()
     if comments.Tweets != []:
         comments.Tweets = []
@@ -297,6 +301,8 @@ def get_one_comment(current_user):
         return {"400": "Invalid Id"}, 400
     if Id == None or str(Id) == "":
         return {"400": "Invalid Id"}, 400
+    if col_of_tweets.find({"_id": ObjectId(Id)}) is None:
+        return {"404": "comment doesnt exist in database"}, 404
     t = t1.get_from_database(Id)
     comments = collectionofcomments()
     if comments.Tweets != []:
@@ -543,6 +549,8 @@ def get_one_retweet(current_user):
         return {"400": "Invalid Id"}, 400
     if Id == None or str(Id) == "":
         return {"400": "Invalid Id"}, 400
+    if col_of_tweets.find({"_id": ObjectId(Id)}) is None:
+        return {"404": "tweet doesnt exist in database"}, 404
     t = t1.get_from_database(Id)
     comments = collectionofcomments()
     if comments.Tweets != []:
