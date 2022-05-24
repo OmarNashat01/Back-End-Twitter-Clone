@@ -26,9 +26,6 @@ Login = Blueprint("Login" ,__name__)
 @Login.route("", methods=['POST'])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 def Home():
-    query = {}
-    blocking = []
-    Database.User.update_many({}, {"$set": {"notifications": blocking}})
     Login_data = request.get_json()
     device_token = Login_data["device_token"]
     email = Login_data["email"]
@@ -40,7 +37,6 @@ def Home():
     isfound = Database.User.find_one({'email': email})
 
     if isfound and password == "NULL":
-        db_response = Database.User.update_many ( {}, {"$set": {"logged_device": ""}})
         return jsonify({"message": "user found", "prof_pic_url": isfound["prof_pic_url"]}), 200
     elif isfound:
         if bcrypt.checkpw(password_byte, isfound["password"]):

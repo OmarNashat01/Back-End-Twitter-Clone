@@ -32,7 +32,7 @@ def token_required(f):
     return decorated
 
 @followers.route("/followers")
-@cross_origin(allow_headers=['Content-Type'])
+@cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def get_list_of_followers(current_user):
     user_id = request.args.get('user_id')
