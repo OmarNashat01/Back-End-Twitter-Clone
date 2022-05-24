@@ -12,6 +12,9 @@ import datetime
 from Database.Database import Database
 from functools import wraps
 from bson.objectid import ObjectId
+import sys
+sys.path.append("..")
+from notifications.Send_notifications import send_notification
 
 
 
@@ -66,6 +69,7 @@ def block_user(current_user):
             date_blocked = datetime.datetime.utcnow() + datetime.timedelta(minutes= duration_in_minutes + 120)
             date_time = date_blocked.strftime("%Y-%m-%d, %H:%M")
             db_response = Database.blocked_users.insert_one({'_id': user_id, 'token':token, 'unblock_date': date_time })
+            send_notification(user_receiving_id = user_id, block_duration = int(duration_in_minutes), notification_type="block_event")
             return jsonify({"message": "The request was successful"}),200
         else:
             check_token = db_response['token']
@@ -75,6 +79,7 @@ def block_user(current_user):
                 db_response = Database.blocked_users.delete_one({'_id': user_id})
                 token = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= duration_in_minutes)}, "SecretKey1911")
                 db_response = Database.blocked_users.insert_one({'_id': user_id, 'token': token})
+                send_notification(user_receiving_id = user_id, block_duration = int(duration_in_minutes), notification_type="block_event")
                 return jsonify({"message": "The request was successful"}),200
 
         return jsonify({"message": "user is already blocked"}),400
