@@ -166,6 +166,7 @@ class comment(Resource):
     Liked_by: str = []
     replies = []
     created_at: datetime
+    needed: str
 
     def __init__(self, username: str = None, user_id: str = None,
                  text: str = None, videos_url: str = [],
@@ -248,6 +249,7 @@ class comment(Resource):
             "comment_count": int(self.reply_count),
             "Liker_ids": self.Liked_by,
             "comments": self.replies, })
+        self.needed = x
         return x
 
     def get_from_database(self, id):
@@ -291,6 +293,7 @@ class Tweet(Resource):
     Liked_by: str = []
     comments = []
     created_at: datetime
+    needed_by: str 
 
     def __init__(self, username: str = None, user_id: str = None,
                  text: str = None, videos_url: str = [],
@@ -309,6 +312,7 @@ class Tweet(Resource):
         self.comment_count = comment_count
         self.comments = comments
         self.created_at = datetime.now().strftime("%Y-%m-%d")
+        
 
     def add_comment(self, newcomment):
         self.comments.append(newcomment)
@@ -413,7 +417,8 @@ class Tweet(Resource):
         self.creation_at = date
 
     def save_to_database(self):
-        col_of_tweets.insert_one({
+        print(self.creation_at)
+        self.needed = col_of_tweets.insert_one({
             "type": "tweet",
             "tweet_id": self._id,
             "prof_pic_url": self.prof_pic_url,
@@ -859,6 +864,7 @@ class retweet(Resource):
     created_at: datetime
     refrenced_tweet_id:str
     Quoted: bool
+    needed:str
 
     def __init__(self, username: str = None, user_id: str = None,
                  text: str = None, videos_url: str = [],
@@ -986,23 +992,23 @@ class retweet(Resource):
         self.creation_at = date
 
     def save_to_database(self):
-        col_of_tweets.insert_one({
-            "type": "retweet",
-            "tweet_id": self._id,
-            "quoted":self.Quoted,
-            "prof_pic_url": self.prof_pic_url,
-            "user_id": self.user_id,
-            "username": self.username,
-            "refrenced_tweet_id":self.refrenced_tweet_id,
-            "created_at": self.created_at,
-            "text": self.Text,
-            "images": self.images_urls,
-            "videos": self.videos_urls,
-            "like_count": int(self.like_count),
-            "retweet_count": int(self.retweet_count),
-            "comment_count": int(self.comment_count),
-            "Liker_ids": self.Liked_by,
-            "comments": self.comments, })
+        self.needed = col_of_tweets.insert_one({
+                                                "type": "retweet",
+                                                "tweet_id": self._id,
+                                                "quoted":self.Quoted,
+                                                "prof_pic_url": self.prof_pic_url,
+                                                "user_id": self.user_id,
+                                                "username": self.username,
+                                                "refrenced_tweet_id":self.refrenced_tweet_id,
+                                                "created_at": self.created_at,
+                                                "text": self.Text,
+                                                "images": self.images_urls,
+                                                "videos": self.videos_urls,
+                                                "like_count": int(self.like_count),
+                                                "retweet_count": int(self.retweet_count),
+                                                "comment_count": int(self.comment_count),
+                                                "Liker_ids": self.Liked_by,
+                                                "comments": self.comments, })
         return self.get_from_database_json(self._id) == {}
 
     def get_from_database(self, id):
@@ -1659,6 +1665,8 @@ class collectionofcomments:
     def get_from_tweet_comments_database(self, pagtoken: int, _id):
         tweet = col_of_tweets.find_one({"_id":_id})
         comment_ids = []
+        if tweet["comments"] == []:
+            return []
         for com in list(tweet["comments"]):
             comment_ids.append(ObjectId(com))
         tweets = list(col_of_tweets.find({"type": "comment","_id":{"$in":comment_ids}}))

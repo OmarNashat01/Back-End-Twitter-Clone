@@ -55,6 +55,7 @@ def token_required(f):
 @token_required
 def blockuser(current_user):
     if request.method == 'GET':
+        
 
         user_id = request.args.get('user_id')
         objInstance_user = ObjectId(user_id)

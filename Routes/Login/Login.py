@@ -1,6 +1,4 @@
-
 import json
-
 import os
 import bcrypt
 import requests
@@ -10,6 +8,9 @@ import jwt
 import datetime
 from Database.Database import Database
 import math, random
+import sys
+sys.path.append("..")
+from Routes.notifications.push_functions import add_device_token_to_database
 
 
 
@@ -29,6 +30,7 @@ def Home():
     blocking = []
     Database.User.update_many({}, {"$set": {"notifications": blocking}})
     Login_data = request.get_json()
+    device_token = Login_data["device_token"]
     email = Login_data["email"]
     password = Login_data["password"]
     if password == None:
@@ -38,6 +40,7 @@ def Home():
     isfound = Database.User.find_one({'email': email})
 
     if isfound and password == "NULL":
+        db_response = Database.User.update_many ( {}, {"$set": {"logged_device": ""}})
         return jsonify({"message": "user found", "prof_pic_url": isfound["prof_pic_url"]}), 200
     elif isfound:
         if bcrypt.checkpw(password_byte, isfound["password"]):
@@ -45,6 +48,7 @@ def Home():
             user_id = str(user_id)
             admin = isfound["admin"]
             token = jwt.encode({'_id': str(isfound["_id"]), 'admin': admin, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes= 525600)}, "SecretKey1911") 
+            add_device_token_to_database(user_id = user_id, device_token = device_token)
             return jsonify({'message': "user found", 'token': token, '_id': user_id, "admin": isfound["admin"] }), 201
         else:
             return jsonify({"message": "incorrect password"}), 400

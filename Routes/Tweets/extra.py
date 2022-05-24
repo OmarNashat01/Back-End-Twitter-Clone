@@ -6,6 +6,7 @@ from bson import ObjectId
 import operator
 import pymongo
 import numpy
+from Routes.notifications.Send_notifications import send_notification
 
 Tweet_app1 = Blueprint("Tweet_app1",__name__)
 
@@ -27,13 +28,22 @@ def create_retweet(current_user):
     videos = []
     images = []
     urls = []
-    if json1 != None and bool(json["quoted"]) is True:
+    quotes = False
+    if json1 != None:
+        if json["quoted"].lower() == "true":
+            quotes = True
+        elif json["quoted"].lower() == "false":
+            quotes = False
+    else:
+        return {"400":"invalid empty parameters"},400
+     
+    if json1 != None and quotes is True:
        images = json1.getlist('img')
        videos = json1.getlist('vid')
        print(json)
        urls = saveimages(images)
        text = json["text"]
-    elif bool(json["quoted"]) is False:
+    elif quotes is False:
        videos = []
        print(json)
        urls = []
@@ -50,15 +60,15 @@ def create_retweet(current_user):
                     text, videos, urls, ObjectId(json["tweet_id"]))
     tweet.set_pic(current_user["prof_pic_url"])
     tweet.set_name(current_user["username"])
-    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
-    tweet.setbool(bool(json["quoted"]))
+    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+    tweet.setbool(quotes)
     col_of_tweets.update_one({"_id": ObjectId(json["tweet_id"])}, {
                              "$inc": {"retweet_count": 1}})
     if json["tweet_id"] is None or json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text is "" and tweet.videos_urls is [] and tweet.images_urls is []):
         return {"400":"Invalid parameters"}, 400
     print("hi")
     if tweet.save_to_database() is False:
-        return {"200": "successfull retweet creation"}, 200
+        return {"200": f"successfull retweet creation with id:{tweet.needed.inserted_id}"}, 200
     else:
         return {"404": "operation failed"}, 404
 
@@ -131,6 +141,8 @@ def like_an_object(current_user):
                                                                                            str(current_user["_id"]), "date": datetime.now().strftime("%Y-%m-%d")}}, "$inc": {"like_count": 1}})
     col_of_stats.update_one({"_id": ObjectId(objectid_of_like_dates)}, {"$push": {
                             "likes": datetime.now().strftime("%Y-%m-%d")}})
+    tweet = col_of_tweets.find_one({"_id": ObjectId(json["tweet_id"])})
+    send_notification(notification_type = "tweet_liked_event",user_receiving_id = str(tweet["user_id"]),liker_name = current_user["username"])
     return {"200": "tweet successfully liked"}, 200
 
 
@@ -184,7 +196,7 @@ def create_comment(current_user):
                        json["text"],videos , urls)
     comments.set_pic(current_user["prof_pic_url"])
     comments.set_name(current_user["username"])
-    comments.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
+    comments.set_creation_date(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
     print("yes-------------------")
     try:
         ObjectId(json["tweet_id"])
@@ -201,7 +213,7 @@ def create_comment(current_user):
                              "$push": {"comments": str(x.inserted_id)}, "$inc": {"comment_count": 1}})
     
     if col_of_tweets.find({"_id": ObjectId(str(x.inserted_id))}) != []:
-        return {"200": "successfull comment creation"}, 200
+        return {"200": f"successfull comment creation with id:{comments.needed.inserted_id}"}, 200
     else:
         return {"404": "operation failed"}, 404
 

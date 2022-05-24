@@ -6,6 +6,7 @@ from bson import ObjectId
 import operator
 import pymongo
 import numpy
+from Routes.notifications.Send_notifications import send_notification
 
 Tweet_app = Blueprint("Tweet_app", __name__)
 path = "C:\\Users\\LEGION\\Downloads\\photos"
@@ -49,11 +50,13 @@ def create_tweet(current_user):
     print(current_user["_id"])
     tweet.set_pic(current_user["prof_pic_url"])
     tweet.set_name(current_user["username"])
-    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
+    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+    print(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
     if json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text == None and tweet.videos_urls == [] and tweet.images_urls == []):
         return {"400", "Invalid parameters"}, 400
     if tweet.save_to_database() is False:
-        return {"200": "successfull tweet creation"}, 200
+        send_notification(notification_type = "user_tweeted_event",user_tweeted_id = current_user["_id"])
+        return {"200": f"successfull tweet creation with id:{tweet.needed.inserted_id}"}, 200
     else:
         return {"404": "operation failed"}, 404
 
@@ -107,13 +110,20 @@ def get_one_tweet(current_user):
         return {"400": "Invalid Id"}, 400
     if Id == None or str(Id) == "":
         return {"400": "Invalid Id"}, 400
+    if col_of_tweets.find({"_id": ObjectId(Id)}) is None:
+        return {"404":"tweet doesnt exist in database"},404
     t = t1.get_from_database(Id)
+    print(t1.Text)
     comments = collectionofcomments()
     if comments.Tweets != []:
         comments.Tweets = []
     comments.get_from_tweet_comments_database(1,ObjectId(Id))
     x = list(col_of_tweets.find(
         {"refrenced_tweet_id": ObjectId(Id)}, {"user_id": 1, "_id": 0}))
+    print(x)
+    userids = []
+    for u in x:
+        userids.append(str(u["user_id"]))
     ID = t1.user_id
     user = col_of_users.find_one({"_id": ObjectId(ID)})
     if t is None:
@@ -135,7 +145,7 @@ def get_one_tweet(current_user):
                     "retweet_count": t1.retweet_count,
                     "comment_count": t1.comment_count,
                     "comments": comments.Tweets,
-                    "retweeters_ids": x}}), 200
+                    "retweeters_ids": userids}}), 200
 
 
 @Tweet_app.route("/random", methods=["GET"])
@@ -297,6 +307,8 @@ def get_one_comment(current_user):
         return {"400": "Invalid Id"}, 400
     if Id == None or str(Id) == "":
         return {"400": "Invalid Id"}, 400
+    if col_of_tweets.find({"_id": ObjectId(Id)}) is None:
+        return {"404": "comment doesnt exist in database"}, 404
     t = t1.get_from_database(Id)
     comments = collectionofcomments()
     if comments.Tweets != []:
@@ -543,6 +555,8 @@ def get_one_retweet(current_user):
         return {"400": "Invalid Id"}, 400
     if Id == None or str(Id) == "":
         return {"400": "Invalid Id"}, 400
+    if col_of_tweets.find({"_id": ObjectId(Id)}) is None:
+        return {"404": "tweet doesnt exist in database"}, 404
     t = t1.get_from_database(Id)
     comments = collectionofcomments()
     if comments.Tweets != []:
@@ -574,7 +588,7 @@ def get_one_retweet(current_user):
                     "like_count": tweet["like_count"],
                     "retweet_count": tweet["retweet_count"],
                     "comment_count": tweet["comment_count"],
-                    "liker_by_ids":tweet["liked_by_ids"],
+                    "liker_by_ids":tweet["Liker_ids"],
                     "created_at":tweet["created_at"],
                     "comments": comments.Tweets
                     }
@@ -896,7 +910,7 @@ def get_one_retweet_cross(current_user):
             "like_count": tweet["like_count"],
             "retweet_count": tweet["retweet_count"],
             "comment_count": tweet["comment_count"],
-            "liker_by_ids": tweet["liked_by_ids"],
+            "liker_by_ids": tweet["Liker_ids"],
             "created_at": tweet["created_at"],
             "comments": tweet["comments"]
         }
