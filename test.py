@@ -27,6 +27,161 @@ data = {"source_user_id": "626551f44d5786f437cbb25b",
 codes = [200, 400]
 OTP = 0
 
+################################# Notifications #################################
+########### Uncomment four times  ###########
+
+# # # # class TestNotificationsID(unittest.TestCase):
+# # # #     user_id = '626551f44d5786f437cbb25b'
+# # # #     notif_id= '628d51f59db90f732a5293bb'
+# # # #     invalid_user_id = 'dsdsds'
+# # # #     not_existing_user_id = '639951f44d5786f437cbb25b'
+# # # #     data = {}
+
+# # # #     def test_sucessful_response(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications?user_id={}&notification_id={}".format(self.user_id,self.notif_id),headers = header)
+# # # #         statuscode = response.status_code
+# # # #         self.assertEqual(statuscode , 200)
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("Notification returned successfully")
+
+# # # #     def test_user_not_found(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications?user_id={}&notification_id={}".format(self.not_existing_user_id,self.notif_id),headers = header)
+# # # #         statuscode = response.status_code
+# # # #         self.assertEqual(statuscode , 404)
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("User Doesnt Exist")    
+
+# # # #     def test_invalid_input(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications?user_id={}&notification_id={}".format(self.invalid_user_id,self.notif_id),headers = header)
+# # # #         statuscode = response.status_code
+# # # #         self.assertEqual(statuscode , 400)
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("Invalid user id entered")    
+
+# # # #     def test_response_content_type(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications?user_id={}&notification_id={}".format(self.user_id,self.notif_id),headers = header)
+# # # #         cont_type = response.content_type
+# # # #         self.assertEqual(cont_type , "application/json")
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("Correct Json data returned")      
+
+
+# # # # class TestNotificationsType(unittest.TestCase):
+# # # #     user_id = '6278fe20281eab1464e4cf2a'
+# # # #     notif_type = 'tweet_liked_event'
+# # # #     invalid_user_id = 'dsdsds'
+# # # #     not_existing_user_id = '639951f44d5786f437cbb25b'
+# # # #     data = {}
+
+# # # #     def test_sucessful_response(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications/type?user_id={}&notification_type={}".format(self.user_id,self.notif_type),headers = header)
+# # # #         statuscode = response.status_code
+# # # #         self.assertEqual(statuscode , 200)
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("Notifications of the user returned successfully")
+
+# # # #     def test_user_not_found(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications/type?user_id={}&notification_type={}".format(self.not_existing_user_id,self.notif_type),headers = header)
+# # # #         statuscode = response.status_code
+# # # #         self.assertEqual(statuscode , 404)
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("User Doesnt Exist")    
+
+# # # #     def test_invalid_input(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications/type?user_id={}&notification_type={}".format(self.invalid_user_id,self.notif_type),headers = header)
+# # # #         statuscode = response.status_code
+# # # #         self.assertEqual(statuscode , 400)
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("Invalid user id entered")    
+
+# # # #     def test_response_content_type(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications/type?user_id={}&notification_type={}".format(self.user_id,self.notif_type),headers = header)
+# # # #         cont_type = response.content_type
+# # # #         self.assertEqual(cont_type , "application/json")
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("Correct Json data returned")   
+
+# # # # class TestNotificationsAll(unittest.TestCase):
+# # # #     user_id = '6278fe20281eab1464e4cf2a'
+# # # #     not_existing_user_id = '639951f44d5786f437cbb25b'
+# # # #     invalid_user_id = 'dsdsds'
+# # # #     data = {}
+# # # #     def test_sucessful_response(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications/all?user_id={}".format(self.user_id),headers = header)
+# # # #         statuscode = response.status_code
+# # # #         self.assertEqual(statuscode , 200)
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("All Notifications of the user returned successfully")
+
+# # # #     def test_user_not_found(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications/all?user_id={}".format(self.not_existing_user_id),headers = header)
+# # # #         statuscode = response.status_code
+# # # #         self.assertEqual(statuscode , 404)
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("User Doesnt Exist")        
+
+# # # #     def test_invalid_input(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications/all?user_id={}".format(self.invalid_user_id),headers = header)
+# # # #         statuscode = response.status_code
+# # # #         self.assertEqual(statuscode , 400)
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("Invalid user id entered")        
+
+# # # #     def test_response_content_type(self):
+# # # #         tester = app.test_client(self)
+# # # #         print("_________________________________________________")
+# # # #         response= tester.get("/users/notifications/all?user_id={}".format(self.user_id),headers = header)
+# # # #         cont_type = response.content_type
+# # # #         self.assertEqual(cont_type , "application/json")
+# # # #         print(response)
+# # # #         print("_________________________________________________")
+# # # #         print("Correct Json data returned")
+                   
+# # # # # # # # ##check if the right notifications are returned, data might be changed by anyone
+# # # # # # # #     # def test_returned_data(self):
+# # # # # # # #     #     tester = app.test_client(self)
+# # # # # # # #     #     print("_________________________________________________")
+# # # # # # # #     #     response= tester.get("/users/notifications/all?user_id=626552274d5786f437cbb25c")
+# # # # # # # #     #     data_returned = response.get_json()
+# # # # # # # #     #     self.assertEqual(data_returned,self.data)   
+# # # # # # # #     #     print(response)
+# # # # # # # #     #     print("_________________________________________________")
+# # # # # # # #     #     print("Correct list of notifications returned")
+
+################################# Notifications #################################
 
 # class TestRetweetCounts(unittest.TestCase):
 
