@@ -66,7 +66,7 @@ def get_by_notification_id(current_user):
     the_notification={}
     list_of_notifications = target_user_document['notifications']
     for notification in list_of_notifications:
-        if len(list_of_notifications < 1):
+        if len(list_of_notifications) < 1:
             break
         notification['_id'] = str(notification['_id'])
         if notification['_id'] == notification_id:

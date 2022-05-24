@@ -65,7 +65,7 @@ def get_specific_type_notification(current_user):
     list_to_return = []
     list_of_specific_type_notifications = target_user_document['notifications']
     for notification in list_of_specific_type_notifications:
-        if len(list_of_specific_type_notifications < 1):
+        if len(list_of_specific_type_notifications) < 1:
             break
         if notification['type'] == notification_type:
             notification['_id'] = str(notification['_id'])
