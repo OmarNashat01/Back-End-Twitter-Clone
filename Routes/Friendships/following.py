@@ -46,6 +46,8 @@ def follow_user(current_user):
             objInstance_target= ObjectId(target_user)
         except:
             return jsonify({"message": "Please, Eneter a valid object User ID"}) , 400
+        if source_user == target_user:
+            return jsonify({"message": "You cannot follow your self"}) , 400
 
         my_collection = mydb["User"]
         myquery1 = {"_id": objInstance_source}

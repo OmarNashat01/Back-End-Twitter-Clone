@@ -28,13 +28,22 @@ def create_retweet(current_user):
     videos = []
     images = []
     urls = []
-    if json1 != None and bool(json["quoted"]) is True:
+    quotes = False
+    if json1 != None:
+        if json["quoted"].lower() == "true":
+            quotes = True
+        elif json["quoted"].lower() == "false":
+            quotes = False
+    else:
+        return {"400":"invalid empty parameters"},400
+     
+    if json1 != None and quotes is True:
        images = json1.getlist('img')
        videos = json1.getlist('vid')
        print(json)
        urls = saveimages(images)
        text = json["text"]
-    elif bool(json["quoted"]) is False:
+    elif quotes is False:
        videos = []
        print(json)
        urls = []
@@ -52,7 +61,7 @@ def create_retweet(current_user):
     tweet.set_pic(current_user["prof_pic_url"])
     tweet.set_name(current_user["username"])
     tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-    tweet.setbool(bool(json["quoted"]))
+    tweet.setbool(quotes)
     col_of_tweets.update_one({"_id": ObjectId(json["tweet_id"])}, {
                              "$inc": {"retweet_count": 1}})
     if json["tweet_id"] is None or json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text is "" and tweet.videos_urls is [] and tweet.images_urls is []):

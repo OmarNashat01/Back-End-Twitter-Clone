@@ -44,7 +44,7 @@ def token_required(f):
 @notification_by_id.route('/notifications')
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
-def get_by_notification_id():
+def get_by_notification_id(current_user):
     user_id = request.args.get('user_id')
     notification_id = request.args.get('notification_id')
     ## targeting the given user
@@ -66,6 +66,8 @@ def get_by_notification_id():
     the_notification={}
     list_of_notifications = target_user_document['notifications']
     for notification in list_of_notifications:
+        if len(list_of_notifications < 1):
+            break
         notification['_id'] = str(notification['_id'])
         if notification['_id'] == notification_id:
             the_notification = notification
