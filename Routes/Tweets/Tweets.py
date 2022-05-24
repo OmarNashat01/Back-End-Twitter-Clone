@@ -588,7 +588,7 @@ def get_one_retweet(current_user):
                     "like_count": tweet["like_count"],
                     "retweet_count": tweet["retweet_count"],
                     "comment_count": tweet["comment_count"],
-                    "liker_by_ids":tweet["liked_by_ids"],
+                    "liker_by_ids":tweet["Liker_ids"],
                     "created_at":tweet["created_at"],
                     "comments": comments.Tweets
                     }
@@ -910,7 +910,7 @@ def get_one_retweet_cross(current_user):
             "like_count": tweet["like_count"],
             "retweet_count": tweet["retweet_count"],
             "comment_count": tweet["comment_count"],
-            "liker_by_ids": tweet["liked_by_ids"],
+            "liker_by_ids": tweet["Liker_ids"],
             "created_at": tweet["created_at"],
             "comments": tweet["comments"]
         }

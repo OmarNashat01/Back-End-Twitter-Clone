@@ -993,22 +993,22 @@ class retweet(Resource):
 
     def save_to_database(self):
         self.needed = col_of_tweets.insert_one({
-            "type": "retweet",
-            "tweet_id": self._id,
-            "quoted":self.Quoted,
-            "prof_pic_url": self.prof_pic_url,
-            "user_id": self.user_id,
-            "username": self.username,
-            "refrenced_tweet_id":self.refrenced_tweet_id,
-            "created_at": self.created_at,
-            "text": self.Text,
-            "images": self.images_urls,
-            "videos": self.videos_urls,
-            "like_count": int(self.like_count),
-            "retweet_count": int(self.retweet_count),
-            "comment_count": int(self.comment_count),
-            "Liker_ids": self.Liked_by,
-            "comments": self.comments, })
+                                                "type": "retweet",
+                                                "tweet_id": self._id,
+                                                "quoted":self.Quoted,
+                                                "prof_pic_url": self.prof_pic_url,
+                                                "user_id": self.user_id,
+                                                "username": self.username,
+                                                "refrenced_tweet_id":self.refrenced_tweet_id,
+                                                "created_at": self.created_at,
+                                                "text": self.Text,
+                                                "images": self.images_urls,
+                                                "videos": self.videos_urls,
+                                                "like_count": int(self.like_count),
+                                                "retweet_count": int(self.retweet_count),
+                                                "comment_count": int(self.comment_count),
+                                                "Liker_ids": self.Liked_by,
+                                                "comments": self.comments, })
         return self.get_from_database_json(self._id) == {}
 
     def get_from_database(self, id):
