@@ -15,10 +15,8 @@ import random
 from Database.Database import Database as mydb
 
 
-forgot_password = Blueprint("forgot_password" ,__name__)
+forgot_password = Blueprint("forgot_password", __name__)
 mail = Mail()
-
-
 
 
 ############################################
@@ -56,7 +54,15 @@ def forgotpasswordOTP():
         user_document = my_collection.find_one(
             myquery1)  # Source User to add to the followers list
 
-        if user_document:
+        if user_document == None:
+            return Response(
+                response=json.dumps(
+                    {"message": "User not found"
+                     }),
+                status=404,
+                mimetype="application/json"
+            )
+        else:
             OTP = generateOTP()
 
         collection = mydb["OTPs"]
@@ -132,4 +138,3 @@ def change_password(current_user):
 
 
 #############################################
-
