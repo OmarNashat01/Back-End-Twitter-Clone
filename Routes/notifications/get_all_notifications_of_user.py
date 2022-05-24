@@ -61,7 +61,7 @@ def get_all_notifications(current_user):
 
     notifications_list = user_document['notifications']
     for notification in notifications_list:
-        if len(notifications_list < 1):
+        if len(notifications_list) < 1:
             break
         notification['_id'] = str(notification['_id'])
 
