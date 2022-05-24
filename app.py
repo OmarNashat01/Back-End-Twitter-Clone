@@ -1,3 +1,4 @@
+import imp
 from flask import Flask
 from flask_cors import CORS
 
@@ -25,7 +26,10 @@ from Routes.forgot_password.forgot_password import forgot_password
 from Routes.change_password.change_password import change_password
 from Routes.block_user.post_block import block
 from Routes.block_user.get_blocked import getblock
-
+#### notifications ###
+from Routes.notifications.get_all_notifications_of_user import all_notifications
+from Routes.notifications.get_by_notification_id import notification_by_id
+from Routes.notifications.get_specific_notification_type_for_auser import notification_by_type
 # Creating flask application
 app = Flask(__name__, template_folder='Templates')
 app.config.from_pyfile('config.cfg')
@@ -38,6 +42,13 @@ app.secret_key = "MakO"
 
 
 # Registering all the blue prints created in other files
+
+# Notifications
+app.register_blueprint(all_notifications, url_prefix = '/users/notifications')
+app.register_blueprint(notification_by_id, url_prefix = '/users')
+app.register_blueprint(notification_by_type, url_prefix = '/users/notifications')
+# Notifications
+
 app.register_blueprint(Login, url_prefix='/Login')
 app.register_blueprint(GetAll, url_prefix='/users')
 app.register_blueprint(signup, url_prefix='/signup')
