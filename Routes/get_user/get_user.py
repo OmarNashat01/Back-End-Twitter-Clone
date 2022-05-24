@@ -52,7 +52,6 @@ def singleuser(current_user):
     query = {"_id": ObjectId(request.args["_id"])}
     user = mydb.User.find_one(query)
     if user == None:
-        print("la2")
         return Response(
             response=json.dumps(
                 {"message": "User ID not found"
