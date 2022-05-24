@@ -42,7 +42,7 @@ def token_required(f):
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 
-def get_all_notifications():
+def get_all_notifications(current_user):
     user_id = request.args.get('user_id')
     try:
         user_id_object = ObjectId(user_id)
@@ -61,6 +61,8 @@ def get_all_notifications():
 
     notifications_list = user_document['notifications']
     for notification in notifications_list:
+        if len(notifications_list < 1):
+            break
         notification['_id'] = str(notification['_id'])
 
     return jsonify({"notifications": notifications_list}),200

@@ -41,7 +41,7 @@ def token_required(f):
 @notification_by_type.route('/type')
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
-def get_specific_type_notification():
+def get_specific_type_notification(current_user):
     user_id = request.args.get('user_id')
     notification_type = request.args.get('notification_type')
     types_list = ['block_event','tweet_liked_event' ,'user_tweeted_event']
