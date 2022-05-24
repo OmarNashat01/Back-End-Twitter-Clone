@@ -1,4 +1,3 @@
-
 import json
 import os
 import bcrypt
@@ -11,7 +10,7 @@ from Database.Database import Database
 import math, random
 import sys
 sys.path.append("..")
-from notifications.push_functions import add_device_token_to_database
+from Routes.notifications.push_functions import add_device_token_to_database
 
 
 
