@@ -50,7 +50,7 @@ def create_retweet(current_user):
                     text, videos, urls, ObjectId(json["tweet_id"]))
     tweet.set_pic(current_user["prof_pic_url"])
     tweet.set_name(current_user["username"])
-    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
+    tweet.set_creation_date(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
     tweet.setbool(bool(json["quoted"]))
     col_of_tweets.update_one({"_id": ObjectId(json["tweet_id"])}, {
                              "$inc": {"retweet_count": 1}})
@@ -58,7 +58,7 @@ def create_retweet(current_user):
         return {"400":"Invalid parameters"}, 400
     print("hi")
     if tweet.save_to_database() is False:
-        return {"200": "successfull retweet creation"}, 200
+        return {"200": f"successfull retweet creation with id:{tweet.needed.inserted_id}"}, 200
     else:
         return {"404": "operation failed"}, 404
 
@@ -184,7 +184,7 @@ def create_comment(current_user):
                        json["text"],videos , urls)
     comments.set_pic(current_user["prof_pic_url"])
     comments.set_name(current_user["username"])
-    comments.set_creation_date(datetime.now().strftime("%Y-%m-%d"))
+    comments.set_creation_date(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
     print("yes-------------------")
     try:
         ObjectId(json["tweet_id"])
@@ -201,7 +201,7 @@ def create_comment(current_user):
                              "$push": {"comments": str(x.inserted_id)}, "$inc": {"comment_count": 1}})
     
     if col_of_tweets.find({"_id": ObjectId(str(x.inserted_id))}) != []:
-        return {"200": "successfull comment creation"}, 200
+        return {"200": f"successfull comment creation with id:{comments.needed.inserted_id}"}, 200
     else:
         return {"404": "operation failed"}, 404
 
