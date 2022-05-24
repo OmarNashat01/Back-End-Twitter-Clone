@@ -50,10 +50,8 @@ def token_required(f):
 @token_required
 def block_user(current_user):
     if current_user['admin'] == True:
-        db_response = Database.User.update_many ( {}, {"$set": {"logged_device": ""}})
         blocked_user_array = []
         db_response = Database.blocked_users.find({})
-        #print(list(db_response))
         for i in db_response:
             try:
                 jwt.decode(i['token'], "SecretKey1911", "HS256")
