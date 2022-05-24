@@ -44,6 +44,9 @@ def token_required(f):
 def get_specific_type_notification():
     user_id = request.args.get('user_id')
     notification_type = request.args.get('notification_type')
+    types_list = ['block_event','tweet_liked_event' ,'user_tweeted_event']
+    if notification_type not in types_list:
+        return jsonify({"Error message": "Please, Select one of these types [block_event - tweet_liked_event - user_tweeted_event]"}) , 400
     ## targeting the given user
     user_collection = mydb['User']
     try:
