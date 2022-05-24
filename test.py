@@ -1,34 +1,35 @@
-# import unittest
-# from wsgiref import headers
-# from app import app
-# import json
-# from Routes.Tweetstruct import col_of_tweets,col_of_users
-# import pymongo 
-# from bson import ObjectId
-# from Database.Database import Database
-# # sub class from testcase class
+import unittest
+from wsgiref import headers
+from app import app
+import json
+from Routes.Tweetstruct import col_of_tweets, col_of_users
+import pymongo
+from bson import ObjectId
+from Database.Database import Database
+# sub class from testcase class
 
 
-# token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI2MjY1NTIyNzRkNTc4NmY0MzdjYmIyNWMiLCJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjgyMzQzOTExfQ.b6-oq0j_Uto5NGvyobu4y2BVRjmM_6cUT9zQJ1I9FP8"
-# header = {"x-access-token": token}
-# user_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI2MjY1NTFmNDRkNTc4NmY0MzdjYmIyNWIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTY4MjM0MzQ5MX0.8xbJXtfITqlxM1YwdaRV1kr1qXRtvQJ3glhjxNdOPD4"
-# header2 = {"x-access-token": user_token}
+token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI2MjY1NTIyNzRkNTc4NmY0MzdjYmIyNWMiLCJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjgyMzQzOTExfQ.b6-oq0j_Uto5NGvyobu4y2BVRjmM_6cUT9zQJ1I9FP8"
+header = {"x-access-token": token}
+user_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI2MjY1NTFmNDRkNTc4NmY0MzdjYmIyNWIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTY4MjM0MzQ5MX0.8xbJXtfITqlxM1YwdaRV1kr1qXRtvQJ3glhjxNdOPD4"
+header2 = {"x-access-token": user_token}
 
-# tweet2 = col_of_tweets.find_one({"_id":{"$ne":ObjectId("6266b4bc234280718fc89ecf")}})
-# tweettobedeleted = tweet2["_id"]
-# user1 = col_of_users.find_one({"_id":ObjectId("626551f44d5786f437cbb25b")},{"following.user_id":1,"_id":0})
+tweet2 = col_of_tweets.find_one(
+    {"_id": {"$ne": ObjectId("6266b4bc234280718fc89ecf")}})
+tweettobedeleted = tweet2["_id"]
+user1 = col_of_users.find_one({"_id": ObjectId("626551f44d5786f437cbb25b")}, {
+                              "following.user_id": 1, "_id": 0})
 # print(user1)
-# user = col_of_users.find_one({"_id":{"$nin":list(user1["following"])}})
-# header1 = {"x-access-token": token}
-# data = {"source_user_id": "626551f44d5786f437cbb25b",
-#         "target_user_id": "6265b8efc557bc4aa2f038ab"}
-# codes = [200,400]
-# OTP = 0
-
+user = col_of_users.find_one({"_id": {"$nin": list(user1["following"])}})
+header1 = {"x-access-token": token}
+data = {"source_user_id": "626551f44d5786f437cbb25b",
+        "target_user_id": "6265b8efc557bc4aa2f038ab"}
+codes = [200, 400]
+OTP = 0
 
 
 # class TestRetweetCounts(unittest.TestCase):
-    
+
 #     #check for response 200, List of users returned successfully
 #     def test_success(self):
 #         tester = app.test_client(self)
@@ -224,7 +225,7 @@
 #         print(response.status_code)
 #         print(response)
 #         print("followers retrieval of user followers success")
-        
+
 
 #     #check if returned users are right
 #     # def test_data(self):
@@ -276,7 +277,7 @@
 #         print(response.status_code)
 #         print(response)
 #         print("test_tweet_not_found")
-        
+
 
 #     # check for response 200, List of tweets returned successfully
 
@@ -535,7 +536,7 @@
 #         print(response)
 #         print("test_tweet_count_not_found")
 # class test_Login(unittest.TestCase):
-    
+
 #     def test_correct_email_password(self):
 #         print("_________________")
 #         tester = app.test_client(self)
@@ -558,7 +559,7 @@
 #             content_type='application/json')
 #         statuscode = response.status_code
 #         self.assertEqual(statuscode, 400)
-    
+
 #     def test_wrong_email_address(self):
 #         print("_________________")
 #         tester = app.test_client(self)
@@ -570,7 +571,7 @@
 #         statuscode = response.status_code
 #         self.assertEqual(statuscode, 404)
 
-#     def test_signup_OTP(self): #inserting a verfied user in the database 
+#     def test_signup_OTP(self): #inserting a verfied user in the database
 
 #         tester = app.test_client(self)
 #         response = tester.post("/signup/verify", data=json.dumps({
@@ -582,11 +583,8 @@
 #         self.assertEqual(statuscode, 200)
 
 
-    
+#     def test_signup(self): #inserting a verfied user in the database
 
-
-#     def test_signup(self): #inserting a verfied user in the database  
-        
 #         print("_________________")
 #         tester = app.test_client(self)
 #         response = tester.post("/signup", data=json.dumps({
@@ -605,9 +603,9 @@
 #         self.assertEqual(statuscode, 200)
 #         data = json.loads(response.get_data(as_text=True))
 #         response = Database.User.delete_one({"username": "never_inserted"})
-    
-#     def test_signup_existing_username(self): #inserting a verfied user in the database  
-        
+
+#     def test_signup_existing_username(self): #inserting a verfied user in the database
+
 #         print("_________________")
 #         tester = app.test_client(self)
 #         response = tester.post("/signup", data=json.dumps({
@@ -628,8 +626,6 @@
 #         self.assertEqual(statuscode, 400)
 
 
-
-
 #     def test_get_all_admin(self): #admin using the command GETALL
 #         print("_________________")
 #         tester = app.test_client(self)
@@ -646,9 +642,133 @@
 #         statuscode = response.status_code
 #         self.assertEqual(statuscode, 403)
 #         print(response.status_code)
-#         print(response) 
+#         print(response)
 
-# if __name__ == "__main__":
-#     unittest.main()
-#     # if successful_tests != no_of_tests:
-#     #     print(f"{(successful_tests/no_of_tests)*100}%")
+
+# class TestUserBlockUsers(unittest.TestCase):
+
+#     # # check for response 200, user returned successfully
+#     def test_get_blocked_user_success(self):
+#         print("_________________________________________________")
+#         tester = app.test_client(self)
+#         response = tester.get(
+#             "/users/block?user_id=626552274d5786f437cbb25c", headers=header)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 200)
+#         print("user is returned")
+#         print("_________________________________________________")
+#         print(response.status_code)
+#         # print(response)
+#         print("test_get_blocked_user_success")
+
+#     # check for response 404, User ID not found
+#     def test_get_blocked_user_not_found(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.get(
+#             "/users/block?user_id=626552274d5786f437cbb123", headers=header)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 404)
+#         print("User Doesn't Exist")
+#         print("_________________________________________________")
+#         print(response.status_code)
+#         # print(response)
+#         print("test_get_blocked_user_not_found")
+
+#     # check for response 200, user blocked user successfully
+#     def test_user_block_user_success(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.post("/users/block", data=json.dumps({
+#             "source_user_id": "627832fa281eab1464e4cf13",
+#             "target_user_id": "62753149281eab1464e4ceee"
+#         }),
+#             content_type='application/json', headers=header, follow_redirects=True)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 200)
+#         print("_________________________________________________")
+#         print("Sucessfully blocked and unfollowed the user")
+#         # print(response)
+#         print("test_user_block_user_success")
+
+#     # check for response 404, target user not found
+#     def test_user_block_user_not_found(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.post("/users/block", data=json.dumps({
+#             "source_user_id": "627832fa281eab1464e4cf13",
+#             "target_user_id": "6278fe20281eab1464e4c123"
+#         }),
+#             content_type='application/json', headers=header, follow_redirects=True)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 404)
+#         print("User Doesn't Exist")
+#         print("_________________________________________________")
+#         print(response.status_code)
+#         # print(response)
+#         print("test_user_block_user_not_found")
+
+#     # check for response 200, user unblocked user successfully
+#     def test_user_unblock_user_success(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.delete(
+#             "/users/block?source_user_id=627832fa281eab1464e4cf13&target_user_id=62739912281eab1464e4cee9", headers=header, follow_redirects=True)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 200)
+#         print("Unblocked the user successfully")
+#         print("_________________________________________________")
+#         print(response.status_code)
+#         # print(response)
+#         print("test_user_unblock_user_success")
+
+#     # check for response 404, target user not found
+#     def test_user_unblock_user_not_found(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.delete(
+#             "/users/block?source_user_id=62687426e1cdff517c447e4a&target_user_id=626551f44d5786f437cbb123", headers=header, follow_redirects=True)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 404)
+#         print("User Doesn't Exist")
+#         print("_________________________________________________")
+#         print(response.status_code)
+#         # print(response)
+#         print("test_user_unblock_user_not_found")
+
+#     # check for response 400, user not blocked aslun
+#     def test_user_unblock_user_not_blocked(self):
+#         tester = app.test_client(self)
+#         print("_________________________________________________")
+#         response = tester.delete(
+#             "/users/block?source_user_id=62687426e1cdff517c447e4a&target_user_id=626551f44d5786f437cbb25b", headers=header, follow_redirects=True)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 400)
+#         print("User not blocked")
+#         print("_________________________________________________")
+#         print(response.status_code)
+#         # print(response)
+#         print("test_user_unblock_user_not_blocked")
+
+
+# class ChangePassword(unittest.TestCase):
+
+#     # check for response 200, changed password successfully
+#     def test_change_password_success(self):
+#         print("_________________________________________________")
+#         tester = app.test_client(self)
+#         response = tester.put("/users/change_password", data=json.dumps({
+#             "password": "helloo"
+#         }),
+#             content_type='application/json', headers=header)
+#         statuscode = response.status_code
+#         self.assertEqual(statuscode, 200)
+#         print("The request was succesful")
+#         print("_________________________________________________")
+#         print(response.status_code)
+#         # print(response)
+#         print("test_change_password_success")
+
+
+if __name__ == "__main__":
+    unittest.main()
