@@ -58,7 +58,7 @@ def create_retweet(current_user):
         return {"400":"Invalid parameters"}, 400
     print("hi")
     if tweet.save_to_database() is False:
-        return {"200": "successfull retweet creation"}, 200
+        return {"200": f"successfull retweet creation with id:{tweet.needed.inserted_id}"}, 200
     else:
         return {"404": "operation failed"}, 404
 
@@ -201,7 +201,7 @@ def create_comment(current_user):
                              "$push": {"comments": str(x.inserted_id)}, "$inc": {"comment_count": 1}})
     
     if col_of_tweets.find({"_id": ObjectId(str(x.inserted_id))}) != []:
-        return {"200": "successfull comment creation"}, 200
+        return {"200": f"successfull comment creation with id:{comments.needed.inserted_id}"}, 200
     else:
         return {"404": "operation failed"}, 404
 

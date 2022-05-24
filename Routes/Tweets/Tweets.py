@@ -54,7 +54,7 @@ def create_tweet(current_user):
     if json == None or json == {} or str(tweet.username) is False or str(tweet.user_id) is False or str(tweet.Text) is False or tweet.username is None or (tweet.Text == None and tweet.videos_urls == [] and tweet.images_urls == []):
         return {"400", "Invalid parameters"}, 400
     if tweet.save_to_database() is False:
-        return {"200": "successfull tweet creation"}, 200
+        return {"200": f"successfull tweet creation with id:{tweet.needed.inserted_id}"}, 200
     else:
         return {"404": "operation failed"}, 404
 
@@ -118,6 +118,10 @@ def get_one_tweet(current_user):
     comments.get_from_tweet_comments_database(1,ObjectId(Id))
     x = list(col_of_tweets.find(
         {"refrenced_tweet_id": ObjectId(Id)}, {"user_id": 1, "_id": 0}))
+    print(x)
+    userids = []
+    for u in x:
+        userids.append(str(u["user_id"]))
     ID = t1.user_id
     user = col_of_users.find_one({"_id": ObjectId(ID)})
     if t is None:
@@ -139,7 +143,7 @@ def get_one_tweet(current_user):
                     "retweet_count": t1.retweet_count,
                     "comment_count": t1.comment_count,
                     "comments": comments.Tweets,
-                    "retweeters_ids": x}}), 200
+                    "retweeters_ids": userids}}), 200
 
 
 @Tweet_app.route("/random", methods=["GET"])

@@ -166,6 +166,7 @@ class comment(Resource):
     Liked_by: str = []
     replies = []
     created_at: datetime
+    needed: str
 
     def __init__(self, username: str = None, user_id: str = None,
                  text: str = None, videos_url: str = [],
@@ -248,6 +249,7 @@ class comment(Resource):
             "comment_count": int(self.reply_count),
             "Liker_ids": self.Liked_by,
             "comments": self.replies, })
+        self.needed = x
         return x
 
     def get_from_database(self, id):
@@ -291,6 +293,7 @@ class Tweet(Resource):
     Liked_by: str = []
     comments = []
     created_at: datetime
+    needed_by: str 
 
     def __init__(self, username: str = None, user_id: str = None,
                  text: str = None, videos_url: str = [],
@@ -309,6 +312,7 @@ class Tweet(Resource):
         self.comment_count = comment_count
         self.comments = comments
         self.created_at = datetime.now().strftime("%Y-%m-%d")
+        
 
     def add_comment(self, newcomment):
         self.comments.append(newcomment)
@@ -414,7 +418,7 @@ class Tweet(Resource):
 
     def save_to_database(self):
         print(self.creation_at)
-        col_of_tweets.insert_one({
+        self.needed = col_of_tweets.insert_one({
             "type": "tweet",
             "tweet_id": self._id,
             "prof_pic_url": self.prof_pic_url,
@@ -860,6 +864,7 @@ class retweet(Resource):
     created_at: datetime
     refrenced_tweet_id:str
     Quoted: bool
+    needed:str
 
     def __init__(self, username: str = None, user_id: str = None,
                  text: str = None, videos_url: str = [],
@@ -987,7 +992,7 @@ class retweet(Resource):
         self.creation_at = date
 
     def save_to_database(self):
-        col_of_tweets.insert_one({
+        self.needed = col_of_tweets.insert_one({
             "type": "retweet",
             "tweet_id": self._id,
             "quoted":self.Quoted,
