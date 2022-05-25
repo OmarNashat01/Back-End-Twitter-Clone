@@ -109,28 +109,43 @@ def change_password(current_user):
     if request.method == 'PUT':
         try:
             data = request.get_json()
-            password = data["password"]
-            password_byte = bytes(password, "ascii")
-            hashed_pw = bcrypt.hashpw(password_byte, bcrypt.gensalt())
+            email = data['email']
 
-            user_id = ObjectId(current_user["_id"])
+            my_collection = mydb["User"]
+            myquery1 = {"email": email}
 
-            db_response = mydb.User.update_one(
-                {"_id": user_id},
-                {"$set": {"password": hashed_pw}}
-            )
+            # Source User to add to the followers list
+            user = my_collection.find_one(myquery1)
 
-            user = mydb.User.find_one(user_id)
-            del user['password']
-            user["creation_date"] = user["creation_date"].date()
-            user["creation_date"] = user["creation_date"].strftime("%Y-%m-%d")
-            user["_id"] = str(user["_id"])
-            return Response(
-                response=json.dumps(
-                    {"message": "The request was succesful"
-                     }),
-                status=200,
-                mimetype="application/json")
+            if user == None:
+                return Response(
+                    response=json.dumps(
+                        {"message": "User not found"
+                         }),
+                    status=404,
+                    mimetype="application/json"
+                )
+            else:
+                password = data["password"]
+                password_byte = bytes(password, "ascii")
+                hashed_pw = bcrypt.hashpw(password_byte, bcrypt.gensalt())
+
+                db_response = mydb.User.update_one(
+                    myquery1,
+                    {"$set": {"password": hashed_pw}}
+                )
+
+                del user['password']
+                user["creation_date"] = user["creation_date"].date()
+                user["creation_date"] = user["creation_date"].strftime(
+                    "%Y-%m-%d")
+                user["_id"] = str(user["_id"])
+                return Response(
+                    response=json.dumps(
+                        {"message": "The request was succesful"
+                         }),
+                    status=200,
+                    mimetype="application/json")
         except Exception as ex:
             print("**********")
             print(ex)
