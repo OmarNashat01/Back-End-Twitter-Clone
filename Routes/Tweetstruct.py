@@ -25,8 +25,8 @@ col_of_stats = db["stats"]
 col_of_users = db["User"]
 col_of_blocked = db["blocked_users"]
 col_of_images = db["images"]
-
-
+col_of_spaces =db["Spaces"]
+col_of_trends = db["Trends"]
 
 
 
@@ -184,7 +184,7 @@ class comment(Resource):
         self.retweet_count = retweet_count
         self.reply_count = comment_count
         self.replies = comments
-        self.created_at = datetime.now().strftime("%Y-%m-%d")
+        self.created_at = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
     
 
@@ -311,7 +311,7 @@ class Tweet(Resource):
         self.retweet_count = retweet_count
         self.comment_count = comment_count
         self.comments = comments
-        self.created_at = datetime.now().strftime("%Y-%m-%d")
+        self.created_at = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         
 
     def add_comment(self, newcomment):
@@ -882,7 +882,7 @@ class retweet(Resource):
         self.retweet_count = retweet_count
         self.comment_count = comment_count
         self.comments = comments
-        self.created_at = datetime.now().strftime("%Y-%m-%d")
+        self.created_at = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         self.refrenced_tweet_id = refrenced_tweet_id
 
     def add_comment(self, newcomment):

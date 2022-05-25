@@ -1,4 +1,4 @@
-from Routes.Tweetstruct import Tweet, collectionoftweets, token_required, col_of_users, retweet, col_of_tweets, objectid_of_like_dates,col_of_stats,comment,collectionofcomments,Client,collectionofretweets,saveimages,check_block
+from Routes.Tweetstruct import Tweet, collectionoftweets, token_required, col_of_users, retweet, col_of_tweets, objectid_of_like_dates,col_of_stats,comment,collectionofcomments,Client,collectionofretweets,saveimages,check_block,col_of_trends
 from flask import Blueprint, request, jsonify,send_file
 from flask_cors import cross_origin
 from datetime import datetime, timedelta
