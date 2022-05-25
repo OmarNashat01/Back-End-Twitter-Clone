@@ -23,6 +23,7 @@ from Routes.Tweetstruct import saveimages
 
 update_user = Blueprint('update_user', __name__)
 
+
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -46,24 +47,33 @@ def token_required(f):
     return decorated
 
 
+
 ############################################
 
 @update_user.route("/update_profile", methods=["PUT"])
 @token_required
 def updateuser(current_user):
-    # print(request.form["_id"])
+
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
     try:
         data = request.get_json()
+
+        json1 = request.files
+
+        if json1 != None:
+            prof_pic_url = json1.get('prof_pic_url')
+            prof_pic_url = saveimages(prof_pic_url)
+            cover_pic_url = json1.get('cover_pic_url')
+            cover_pic_url = saveimages(cover_pic_url)
+
         name = data["name"]
         date_of_birth = data["date_of_birth"]
         bio = data["bio"]
         location = data["location"]
         website = data["website"]
-        prof_pic_url = data["prof_pic_url"]
-        cover_pic_url = data["cover_pic_url"]
-
-        #query = {"_id": ObjectId(current_user["_id"])}
-        #user = db.User.update_one(query)
+        prof_pic_url = prof_pic_url[0]
+        cover_pic_url = cover_pic_url[0]
 
         user_id = ObjectId(current_user["_id"])
         # print(user_id)
@@ -77,9 +87,10 @@ def updateuser(current_user):
                 "website": website,
                 "prof_pic_url": prof_pic_url,
                 "cover_pic_url": cover_pic_url
-            }}
+            }})
 
-        )
+        mydb.Tweets.update({"user_id": user_id}, {
+            "prof_pic_url": prof_pic_url})
 
         user = mydb.User.find_one(user_id)
         del user['password']
