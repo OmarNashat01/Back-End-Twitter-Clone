@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 
 #Importing all Routes
-
+from Routes.Tweets.Spaces import Spaces_APP
 from Routes.Friendships.followers import followers
 from Routes.Friendships.following import following
 from Routes.Statistics.new_accounts import new_accounts_count
@@ -48,7 +48,7 @@ app.register_blueprint(all_notifications, url_prefix = '/users/notifications')
 app.register_blueprint(notification_by_id, url_prefix = '/users')
 app.register_blueprint(notification_by_type, url_prefix = '/users/notifications')
 # Notifications
-
+app.register_blueprint(Spaces_APP,url_prefix='/others')
 app.register_blueprint(Login, url_prefix='/Login')
 app.register_blueprint(GetAll, url_prefix='/users')
 app.register_blueprint(signup, url_prefix='/signup')

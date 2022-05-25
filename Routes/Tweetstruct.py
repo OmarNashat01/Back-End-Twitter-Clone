@@ -26,8 +26,8 @@ col_of_users = db["User"]
 col_of_blocked = db["blocked_users"]
 col_of_images = db["images"]
 col_of_spaces =db["Spaces"]
-col_of_trends = db["Trends"]
-
+col_of_trends = db["Hashtags"]
+col_of_lists = db["lists"]
 
 
 def saveimages(files):
@@ -38,9 +38,23 @@ def saveimages(files):
     for x in range(0,c):
         z = files[x]
         z.save(f"storage//{z.filename}")
-        arr.append(f"http://45.79.245.94:5000//storage//{z.filename}")
+        arr.append(f"http://45.79.245.94:5000/storage/{z.filename}")
     return arr
 
+def gethashes(para: str,tweetid):
+    words  =None
+    if para.contains('#'):
+        para = para.partition
+        para = para[2]
+        words = para.split('#')
+        for word in range(1,words.length):
+           if col_of_trends.find({"wordid":word}) is None:
+               col_of_trends.insert({"wordid":word,"related_tweets_ids":[tweetid]})
+           else:
+               col_of_trends.update({"wordid":word},{"$push":{"related_tweets_ids":tweetid}})
+        return True
+    else:
+        return False
 
 
 
