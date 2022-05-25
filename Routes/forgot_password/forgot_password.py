@@ -104,7 +104,7 @@ def forgotpasswordOTP():
 
 @forgot_password.route("/forgot_password", methods=["PUT"])
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
-def change_password(current_user):
+def change_password():
     # print(request.form["_id"])
     if request.method == 'PUT':
         try:
@@ -121,7 +121,7 @@ def change_password(current_user):
                 return Response(
                     response=json.dumps(
                         {"message": "User not found"
-                         }),
+                        }),
                     status=404,
                     mimetype="application/json"
                 )
