@@ -651,8 +651,8 @@ def get_retweet_count_using_a_string_query_recent(current_user):
 @cross_origin(allow_headers=['Content-Type', 'x-access-token', 'Authorization'])
 @token_required
 def get_retweet_count_using_a_string_query_ALL(current_user):
-    #if current_user["admin"] == False:
-    #   return {"501": "permission not granted"}, 501
+    if current_user["admin"] == False:
+       return {"501": "permission not granted"}, 501
     q = request.args.get("q", default=None, type=str)
     v = list(col_of_tweets.find({}, {"created_at": 1, "_id": 0}))
     v.sort(
