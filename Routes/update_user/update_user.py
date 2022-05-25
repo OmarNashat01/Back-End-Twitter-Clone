@@ -22,6 +22,7 @@ from Database.Database import Database as mydb
 
 update_user = Blueprint('update_user', __name__)
 
+
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -53,6 +54,7 @@ def updateuser(current_user):
     # print(request.form["_id"])
     try:
         data = request.get_json()
+
         name = data["name"]
         date_of_birth = data["date_of_birth"]
         bio = data["bio"]
@@ -61,13 +63,12 @@ def updateuser(current_user):
         prof_pic_url = data["prof_pic_url"]
         cover_pic_url = data["cover_pic_url"]
 
-        #query = {"_id": ObjectId(current_user["_id"])}
-        #user = db.User.update_one(query)
-
         user_id = ObjectId(current_user["_id"])
-        # print(user_id)
-        db_response = mydb.User.update_one(
-            {"_id": user_id},
+
+        myquery1 = {"_id": user_id}
+
+        mydb.User.update_one(
+            {"_id": myquery1},
             {"$set": {
                 "name": name,
                 "date_of_birth": date_of_birth,
@@ -87,8 +88,7 @@ def updateuser(current_user):
         user["_id"] = str(user["_id"])
         return Response(
             response=json.dumps(
-                {"message": "The request was succesful",
-                 "user": user
+                {"message": "The request was succesful"
                  }),
             status=200,
             mimetype="application/json")
