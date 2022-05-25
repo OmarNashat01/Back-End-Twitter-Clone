@@ -9,7 +9,6 @@ import datetime
 import json
 from functools import wraps
 from Database.Database import Database as mydb
-from Routes.Tweetstruct import saveimages
 
 # try:
 #     app = Flask(__name__)
@@ -47,38 +46,29 @@ def token_required(f):
     return decorated
 
 
-
 ############################################
 
 @update_user.route("/update_profile", methods=["PUT"])
 @token_required
 def updateuser(current_user):
-
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-
+    # print(request.form["_id"])
     try:
         data = request.get_json()
-
-        json1 = request.files
-
-        if json1 != None:
-            prof_pic_url = json1.get('prof_pic_url')
-            prof_pic_url = saveimages(prof_pic_url)
-            cover_pic_url = json1.get('cover_pic_url')
-            cover_pic_url = saveimages(cover_pic_url)
 
         name = data["name"]
         date_of_birth = data["date_of_birth"]
         bio = data["bio"]
         location = data["location"]
         website = data["website"]
-        prof_pic_url = prof_pic_url[0]
-        cover_pic_url = cover_pic_url[0]
+        prof_pic_url = data["prof_pic_url"]
+        cover_pic_url = data["cover_pic_url"]
 
         user_id = ObjectId(current_user["_id"])
-        # print(user_id)
-        db_response = mydb.User.update_one(
-            {"_id": user_id},
+
+        myquery1 = {"_id": user_id}
+
+        mydb.User.update_one(
+            {"_id": myquery1},
             {"$set": {
                 "name": name,
                 "date_of_birth": date_of_birth,
@@ -87,10 +77,9 @@ def updateuser(current_user):
                 "website": website,
                 "prof_pic_url": prof_pic_url,
                 "cover_pic_url": cover_pic_url
-            }})
+            }}
 
-        mydb.Tweets.update({"user_id": user_id}, {
-            "prof_pic_url": prof_pic_url})
+        )
 
         user = mydb.User.find_one(user_id)
         del user['password']
@@ -99,8 +88,7 @@ def updateuser(current_user):
         user["_id"] = str(user["_id"])
         return Response(
             response=json.dumps(
-                {"message": "The request was succesful",
-                 "user": user
+                {"message": "The request was succesful"
                  }),
             status=200,
             mimetype="application/json")
